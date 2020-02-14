@@ -7,4 +7,10 @@ Requirements:
 
 Compilation:
 1. First time compiling this ROS workspace do:
+```console
+source /opt/ros/melodic/setup.bash
+cd [path/to/demo/project/root]
+catkin build
+```
+
 
