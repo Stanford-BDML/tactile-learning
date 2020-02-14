@@ -51,11 +51,9 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs ur_driver message_
 # )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  Calibrate.srv
-  Acquire.srv
-)
+#add_service_files(
+#  FILES
+#)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
