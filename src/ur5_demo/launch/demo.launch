@@ -1,4 +1,7 @@
 <launch>
+  <!-- By default, we are not in debug mode -->
+  <arg name="debug" default="false" />
+
   <arg name="limited" default="true"/>
 
   <!-- Load the hardware -->
