@@ -52,3 +52,8 @@ Please look at the ur5_demo.py and how you initialize a ROS node with the ur5
 interface. There are a few examples of how to commend it to go to a cartesian
 pose or a joint pose.
 
+
+### DEBUGGING
+[ur_driver-3] process has died [pid 4024, exit code 1, cmd /home/akira/catkin_ws/src/bdml_ur5/src/universal_robot/ur_driver/src/ur_driver/driver.py 172.22.22.3 50001 __name:=ur_driver __log:=/home/akira/.ros/log/ee614a1a-6491-11ea-ac34-60e3270107fa/ur_driver-3.log].
+log file: /home/akira/.ros/log/ee614a1a-6491-11ea-ac34-60e3270107fa/ur_driver-3*.log
+[ERROR] [1584038870.487967161]: Action client not connected: /follow_joint_trajectory
