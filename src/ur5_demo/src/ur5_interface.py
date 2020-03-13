@@ -18,6 +18,15 @@ import moveit_msgs.msg
 import numpy as np
 from std_msgs.msg import Header
 
+import numpy as np
+from scipy.spatial.transform import Rotation as R
+
+
+### Global definitions
+
+INTER_COMMAND_DELAY = 4
+
+### end global definitions
 
 class UR5Interface:
     """ An interface class for UR5 """
@@ -25,7 +34,11 @@ class UR5Interface:
     joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                    'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
 
-    joint_values_home = [1.5450898256183896, -1.810624635807664, 2.258478488681325, -2.0176230710216156, -1.5706590472860515, 3.1148891041905493]
+    joint_values_home = [1.5450898256183896, -1.810624635807664, 2.258478488681325, 
+                        -2.0176230710216156, -1.5706590472860515, 3.1148891041905493]
+
+    joint_values_calib = [1.544891846222953, -1.8106006673578534, 2.258661677945332, 
+                      -2.0195989461345256, -1.5703836018608142, 2.3299036774634354]
 
     def __init__(self):
         self.robot = moveit_commander.RobotCommander()
@@ -40,8 +53,8 @@ class UR5Interface:
                                                         moveit_msgs.msg.RobotState,
                                                         queue_size=20)
 
-        # Walls are defined with respect to the coordinate frame of the robot base, with directions corresponding
-        # to standing behind the robot and facing into the table.
+        # Walls are defined with respect to the coordinate frame of the robot base, with directions 
+        # corresponding to standing behind the robot and facing into the table.
         rospy.sleep(0.6)
         header = Header()
         header.stamp = rospy.Time.now()
@@ -109,7 +122,7 @@ class UR5Interface:
         for j in self.joint_names:
             b = self.robot.get_joint(j).bounds()
             # If any joint has limits greater than pi then is bad bounds
-            if (b[0] < -(np.pi+0.1)) or (b[1] > (np.pi+0.1)):
+            if (b[0] < -(3*np.pi/2)) or (b[1] > (3*np.pi/2)):
                 return False
 
         return True
@@ -118,6 +131,16 @@ class UR5Interface:
         """ get robot end effector pose """
         return self.group.get_current_pose().pose
 
+    def get_pose_array(self):
+        """ get robot end effector pose as two arrays of position and
+        orientation 
+        """
+        pose = self.group.get_current_pose().pose
+        return np.array([pose.position.x, pose.position.y, 
+                        pose.position.z]), \
+               np.array([pose.orientation.x, pose.orientation.y,
+                        pose.orientation.z, pose.orientation.w])
+
     def get_joint_values(self):
         """ get robot joint values """
         return self.group.get_current_joint_values()
@@ -125,6 +148,14 @@ class UR5Interface:
     def goto_home_pose(self, wait=True):
         """ go to robot end effector home pose """
         self.goto_joint_target(self.joint_values_home, wait=wait)
+
+    def goto_calib_home_pose(self):
+        """ go to robot end effector home pose for calibration.
+            This is basically the same as the home pose but the 
+            frame is rotated by 45 deg in the x axis (axis
+            defined in the ee frame and x pointing along rotation axis.
+        """
+        self.goto_joint_target(self.joint_values_calib, wait=True)
 
     def goto_pose_target(self, pose, wait=True):
         """ go to robot end effector pose target """
@@ -138,6 +169,21 @@ class UR5Interface:
         self.group.execute(plan, wait=True)
         self.group.stop()
         self.group.clear_pose_targets()
+
+    def goto_pose_array_target(self, pos, ori, wait=True):
+        assert len(pos) == 3,\
+              "Error: pos array must be length 3"
+        assert len(ori) == 4,\
+              "Error: orientation (quat) array must be length 4"
+        new_pose = Pose()
+        new_pose.position.x = pos[0]
+        new_pose.position.y = pos[1]
+        new_pose.position.z = pos[2]
+        new_pose.orientation.x = ori[0]
+        new_pose.orientation.y = ori[1]
+        new_pose.orientation.z = ori[2]
+        new_pose.orientation.w = ori[3]
+        self.goto_pose_target(new_pose, wait=wait)
 
     def goto_joint_target(self, joint_vals, wait=True):
         """ go to robot end effector joint target """
