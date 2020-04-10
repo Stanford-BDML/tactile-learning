@@ -7,7 +7,8 @@
   <!-- Load the hardware -->
   <include file="$(find ur_bringup)/launch/ur5_bringup.launch">
     <arg name="robot_ip" value="172.22.22.3"/>
-    <arg name="limited" value="$(arg limited)"/>
+    <arg name="limited" value="true"/>
+  <!--  <arg name="limited" value="$(arg limited)"/> -->
   </include>
 
   <!-- Load moveit planner-->
