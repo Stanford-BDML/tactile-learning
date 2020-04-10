@@ -110,7 +110,7 @@ def test_move_ur5_continuous():
     P3_pose = copy.deepcopy(home_pose)
     P3_pose.position.z += 0.1
 
-    print("============ Current pose: %s" % current_pose)
+   # print("============ Current pose: %s" % current_pose)
 
     # The following commands are just to stall the script
     print("============ Press `Enter` to continue the movement ...")

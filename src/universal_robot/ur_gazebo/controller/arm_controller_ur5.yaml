@@ -16,6 +16,13 @@ arm_controller:
       wrist_1_joint: {trajectory: 0.1, goal: 0.1}
       wrist_2_joint: {trajectory: 0.1, goal: 0.1}
       wrist_3_joint: {trajectory: 0.1, goal: 0.1}
+  pid_gains:
+      shoulder_pan_joint: {p: 100.0, i: 0.01, d: 10.0}
+      shoulder_lift_joint: {p: 100.0, i: 0.01, d: 10.0}
+      elbow_joint: {p: 100.0, i: 0.01, d: 10.0}
+      wrist_1_joint: {p: 100.0, i: 0.01, d: 10.0}
+      wrist_2_joint: {p: 100.0, i: 0.01, d: 10.0}
+      wrist_3_joint: {p: 100.0, i: 0.01, d: 10.0}
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10
@@ -28,4 +35,5 @@ joint_group_position_controller:
      - wrist_1_joint
      - wrist_2_joint
      - wrist_3_joint
+
 
