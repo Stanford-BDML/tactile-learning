@@ -1,0 +1,26 @@
+<launch>
+  <!-- By default, we are not in debug mode -->
+<arg name="paused" default="false"/>
+<arg name="gui" default="true"/>
+<arg name="debug" default="false" />
+<arg name="limited" default="true"/>
+<arg name="sim" default="true"/>
+
+ <!-- Load Gazebo-->
+  <include file="$(find ur_gazebo)/launch/ur5.launch">
+    <arg name="limited" value="$(arg limited)"/>
+  </include>
+
+  <!-- Load moveit planner-->
+  <include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch">
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="limited" value="$(arg limited)"/>
+  </include>
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+</launch>

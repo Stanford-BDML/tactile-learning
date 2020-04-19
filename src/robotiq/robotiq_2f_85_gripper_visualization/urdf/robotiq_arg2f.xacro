@@ -2,11 +2,22 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="robotiq_arg2f_base_link" params="prefix">
     <link name="${prefix}robotiq_arg2f_base_link">
-      <inertial>
+     <inertial>
         <origin xyz="8.625E-08 -4.6583E-06 0.03145" rpy="0 0 0" />
         <mass value="0.22652" />
-        <inertia ixx="0.00020005" ixy="-4.2442E-10" ixz="-2.9069E-10" iyy="0.00017832" iyz="-3.4402E-08" izz="0.00013478" />
+        <inertia ixx="0.00020005" ixy="-4.2442E-10" ixz="-2.9069E-10"
+                 iyx="0.00000" iyy="0.00017832" iyz="-3.4402E-08"
+                 izx="0.00000" izy="0.00000" izz="0.00013478" />
       </inertial>
+
+<!--      <inertial>
+        <mass value="0.636951" />
+        <origin xyz="0.0 0.0 0.0" />
+        <inertia ixx = "0.000380" ixy = "0.000000" ixz = "0.000000"
+                 iyx = "0.000000" iyy = "0.001110" iyz = "0.000000"
+                 izx = "0.000000" izy = "0.000000" izz = "0.001171" />
+      </inertial>   -->
+
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>

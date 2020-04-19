@@ -36,4 +36,15 @@ joint_group_position_controller:
      - wrist_2_joint
      - wrist_3_joint
 
-
+#gripper controller(add)
+gripper_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - right_outer_knuckle_joint
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      gripper_finger1_joint: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
