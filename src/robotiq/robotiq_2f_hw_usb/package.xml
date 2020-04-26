@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robotiq_2f_hw_usb</name>
+  <version>0.0.0</version>
+  <description>The robotiq_2f_hw_usb package</description>
+
+  <maintainer email="carlos@beta-robots.com">Carlos J. Rosales Gallegos</maintainer>
+
+  <license>GPLv3</license>
+
+  <url type="website">https://github.com/ros-industrial/robotiq</url>
+  <url type="bugtracker">https://github.com/ros-industrial/robotiq</url>
+  <url type="repository">https://github.com/ros-industrial/robotiq</url>
+
+  <author email="carlos@beta-robots.com">Carlos J. Rosales Gallegos</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>libmodbus-dev</depend>
+  <depend>robotiq_2f_hardware</depend>
+  <depend>controller_manager</depend>
+  <depend>control_toolbox</depend>
+  <depend>std_msgs</depend>
+</package>
