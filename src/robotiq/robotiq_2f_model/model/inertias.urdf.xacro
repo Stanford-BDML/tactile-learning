@@ -3,7 +3,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
 <!-- length is along the z-axis! -->
-<xacro:macro name="cylinder_inertia" params="radius length mass">
+<xacro:macro name="cyl_iner" params="radius length mass">
 	<inertia ixx="${1000 * mass * (3 * radius * radius + length * length) / 12}" iyy="${1000 * mass * (3 * radius * radius + length * length) / 12}" izz="${1000 * mass * radius* radius / 2}" ixy="0" iyz="0" ixz="0"/>
 </xacro:macro>
 

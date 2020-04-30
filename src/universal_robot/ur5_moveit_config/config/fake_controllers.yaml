@@ -10,3 +10,6 @@ controller_list:
   - name: fake_endeffector_controller
     joints:
       []
+  - name: fake_gripper_controller
+    joints:
+      - simple_gripper_right_driver_joint

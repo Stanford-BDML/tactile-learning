@@ -4,7 +4,7 @@
   <xacro:include filename="$(find ur_description)/urdf/ur.transmission.xacro" />
   <xacro:include filename="$(find ur_description)/urdf/ur.gazebo.xacro" />
 
-  <xacro:macro name="cylinder_inertial" params="radius length mass *origin">
+  <xacro:macro name="c_inertia" params="radius length mass *origin">
     <inertial>
       <mass value="${mass}" />
       <xacro:insert_block name="origin" />
@@ -101,9 +101,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/base.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.05" mass="${base_mass}">
+      <xacro:c_inertia radius="0.06" length="0.05" mass="${base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}shoulder_pan_joint" type="revolute">
@@ -140,9 +140,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/shoulder.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.15" mass="${shoulder_mass}">
+      <xacro:c_inertia radius="0.06" length="0.15" mass="${shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}shoulder_lift_joint" type="revolute">
@@ -179,9 +179,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/upperarm.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.56" mass="${upper_arm_mass}">
+      <xacro:c_inertia radius="0.06" length="0.56" mass="${upper_arm_mass}">
         <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}elbow_joint" type="revolute">
@@ -218,9 +218,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/forearm.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="${-a3}" mass="${forearm_mass}">
+      <xacro:c_inertia radius="0.06" length="${-a3}" mass="${forearm_mass}">
         <origin xyz="0.0 0.0 ${-a3/2}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}wrist_1_joint" type="revolute">
@@ -257,9 +257,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist1.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.12" mass="${wrist_1_mass}">
+      <xacro:c_inertia radius="0.06" length="0.12" mass="${wrist_1_mass}">
         <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}wrist_2_joint" type="revolute">
@@ -296,9 +296,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.06" length="0.12" mass="${wrist_2_mass}">
+      <xacro:c_inertia radius="0.06" length="0.12" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}wrist_3_joint" type="revolute">
@@ -335,9 +335,9 @@
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist3.stl" />
         </geometry>
       </collision>
-      <xacro:cylinder_inertial radius="0.0375" length="0.0345" mass="${wrist_3_mass}">
+      <xacro:c_inertia radius="0.0375" length="0.0345" mass="${wrist_3_mass}">
         <origin xyz="0.0 ${wrist_3_length - 0.0345/2} 0.0" rpy="${pi/2} 0 0" />
-      </xacro:cylinder_inertial>
+      </xacro:c_inertia>
     </link>
 
     <joint name="${prefix}ee_fixed_joint" type="fixed">
@@ -371,12 +371,12 @@
     </joint>
 
     <!-- Frame coincident with all-zeros TCP on UR controller -->
-    <link name="${prefix}tool0"/>
-    <joint name="${prefix}wrist_3_link-tool0_fixed_joint" type="fixed">
+ <!--   <link name="simple_gripper_base"/>
+    <joint name="${prefix}wrist_3_link-simple_gripper_base_fixed_joint" type="fixed">
       <origin xyz="0 ${wrist_3_length} 0" rpy="${pi/-2.0} 0 0"/>
       <parent link="${prefix}wrist_3_link"/>
-      <child link="${prefix}tool0"/>
-    </joint>
+      <child link="simple_gripper_base"/>
+    </joint> -->
 
   </xacro:macro>
 </robot>

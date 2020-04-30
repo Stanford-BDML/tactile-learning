@@ -37,7 +37,7 @@
 			<inertial>
 				<mass value="0.5"/>
 				<origin xyz="0 0 ${0.015*0.5}"  />
-				<cylinder_inertia radius="0.04" length="0.045" mass="0.5"/>
+				<xacro:cyl_iner radius="0.04" length="0.045" mass="0.5"/>
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 -1.5708 0"/>
@@ -67,6 +67,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_base">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>   
 
 		<!-- right finger -->
 
@@ -75,13 +82,13 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_right_driver"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="60" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="10000" velocity="${110 * 3.141592 / 180}" />
 		</joint>
 		<link name="${name}_right_driver">
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.02 0" rpy="0 0 0" />
-				<box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -104,6 +111,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_right_driver">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>   
 
 		<xacro:unless value="${adaptive_transmission}">
 		<joint name="${name}_right_coupler_joint" type="fixed">
@@ -113,19 +127,20 @@
 		</joint>
 		</xacro:unless>
 		<xacro:if value="${adaptive_transmission}">
-			<joint name="${name}_right_coupler_joint" type="revolute">
+		<joint name="${name}_right_coupler_joint" type="revolute">
 			<origin xyz="0 0.0315 -0.0041" rpy="0 0 0"/>
 			<parent link="${name}_right_driver"/>
 			<child link="${name}_right_coupler"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 		</joint>
 		</xacro:if>
+
 		<link name="${name}_right_coupler">
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
-				<box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -148,13 +163,20 @@
 				</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_right_coupler">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>   
 
 		<joint name="${name}_right_follower_joint" type="revolute">
 			<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/>
 			<parent link="${name}_right_coupler"/>
 			<child link="${name}_right_follower"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
@@ -164,7 +186,7 @@
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 -0.018 0.022" />
-				<box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -187,6 +209,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_right_follower">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>  
 
 		<xacro:if value="${with_pads}">
 			<joint name="${name}_right_pad_joint" type="fixed">
@@ -197,7 +226,7 @@
 				<inertial>
 					<mass value="0.1"/>
 					<origin xyz="0 -0.022 0.031" />
-					<box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
+					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
 				</inertial>
 				<visual>
 					<geometry>
@@ -220,6 +249,13 @@
 				</collision>
 				</xacro:if>
 			</link>
+                	<gazebo reference="${name}_right_pad">
+                  	  <implicitSpringDamper>1</implicitSpringDamper>
+                 	   <mu1>100000</mu1>
+                	    <mu2>100000</mu2>
+                 	   <kp>100000000.0</kp>
+                	    <kd>1.0</kd>
+             		</gazebo>  
 		</xacro:if>
 
 		<joint name="${name}_right_spring_link_joint" type="revolute">
@@ -227,7 +263,7 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_right_spring_link"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
@@ -237,7 +273,7 @@
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.018 0.018" rpy="-0.7068 0 0"/>
-				<box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -260,6 +296,21 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_right_spring_link">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>  
+
+		<!-- Add
+		<joint name="${name}_right_spring_link_joint2" type="fixed">
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<parent link="${name}_right_spring_link"/>
+			<child link="${name}_right_follower_link"/>
+			<axis xyz="1 0 0"/>
+		</joint> -->
 
 		<!-- left finger -->
 
@@ -268,7 +319,7 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_left_driver"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
@@ -278,7 +329,7 @@
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.02 0" rpy="0 0 0" />
-				<box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -301,6 +352,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_left_driver">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>  
 
 		<xacro:unless value="${adaptive_transmission}">
 		<joint name="${name}_left_coupler_joint" type="fixed">
@@ -310,19 +368,19 @@
 		</joint>
 		</xacro:unless>
 		<xacro:if value="${adaptive_transmission}">
-			<joint name="${name}_left_coupler_joint" type="revolute">
+		<joint name="${name}_left_coupler_joint" type="revolute">
 			<origin xyz="0 0.0315 -0.0041" rpy="0 0 0"/>
 			<parent link="${name}_left_driver"/>
 			<child link="${name}_left_coupler"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 		</joint>
 		</xacro:if>
 		<link name="${name}_left_coupler">
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
-				<box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -345,13 +403,20 @@
 				</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_left_coupler">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>  
 
 		<joint name="${name}_left_follower_joint" type="revolute">
 			<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/>
 			<parent link="${name}_left_coupler"/>
 			<child link="${name}_left_follower"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
@@ -361,7 +426,7 @@
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 -0.018 0.022" />
-				<box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -384,6 +449,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_left_follower">
+                    <implicitSpringDamper>1</implicitSpringDamper>
+                    <mu1>100000</mu1>
+                    <mu2>100000</mu2>
+                    <kp>100000000.0</kp>
+                    <kd>1.0</kd>
+                </gazebo>  
 
 		<xacro:if value="${with_pads}">
 			<joint name="${name}_left_pad_joint" type="fixed">
@@ -394,7 +466,7 @@
 				<inertial>
 					<mass value="0.1"/>
 					<origin xyz="0 -0.022 0.031" />
-					<box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
+					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
 				</inertial>
 				<visual>
 					<geometry>
@@ -417,6 +489,13 @@
 				</collision>
 				</xacro:if>
 			</link>
+                	<gazebo reference="${name}_left_pad">
+                   	        <implicitSpringDamper>1</implicitSpringDamper>
+                  	        <mu1>100000</mu1>
+                  	        <mu2>100000</mu2>
+                  	        <kp>100000000.0</kp>
+                  	        <kd>1.0</kd>
+             		</gazebo> 
 		</xacro:if>
 
 		<joint name="${name}_left_spring_link_joint" type="revolute">
@@ -424,17 +503,26 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_left_spring_link"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="176" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
 			</xacro:unless>
 		</joint>
+
+		<!-- Add
+		<joint name="${name}_left_spring_link_joint2" type="fixed">
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<parent link="${name}_left_spring_link"/>
+			<child link="${name}_left_follower_link"/>
+			<axis xyz="1 0 0"/>
+		</joint> -->
+
 		<link name="${name}_left_spring_link">
 			<inertial>
 				<mass value="0.1"/>
 				<origin xyz="0 0.018 0.018" rpy="-0.7068 0 0"/>
-				<box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
+				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -457,6 +545,13 @@
 			</collision>
 			</xacro:if>
 		</link>
+                <gazebo reference="${name}_left_spring_link">
+                   	<implicitSpringDamper>1</implicitSpringDamper>
+                  	<mu1>100000</mu1>
+                  	<mu2>100000</mu2>
+                  	<kp>100000000.0</kp>
+                  	<kd>1.0</kd>
+             	</gazebo> 
 
 		<xacro:unless value="${adaptive_transmission}">
 			<transmission name="${name}_right_driver_trans">
@@ -466,6 +561,7 @@
 				</joint>
 				<actuator name="${name}_right_driver_motor">
 					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
 				</actuator>
 			</transmission>
 

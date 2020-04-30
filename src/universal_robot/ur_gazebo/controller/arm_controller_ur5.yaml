@@ -40,11 +40,16 @@ joint_group_position_controller:
 gripper_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-     - right_outer_knuckle_joint
+     - simple_gripper_right_driver_joint
   constraints:
       goal_time: 0.6
       stopped_velocity_tolerance: 0.05
-      gripper_finger1_joint: {trajectory: 0.1, goal: 0.1}
+#have to change the name below
+      simple_gripper_right_driver_joint: {trajectory: 0.1, goal: 0.1}
+  pid_gains:
+      simple_gripper_right_driver_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
+  antiwindup: false
+  publish_state: true
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10
