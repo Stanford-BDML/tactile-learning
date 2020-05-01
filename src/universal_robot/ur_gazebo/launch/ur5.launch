@@ -18,11 +18,11 @@
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
 <!--  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
-        args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />  -->
-<!-- -unpause -->
+        args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
+      -unpause -->
 
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
-        args="-urdf -param robot_description -model robot
+        args="-urdf -param robot_description -model robot -unpause
         -x 0.0
         -y 0.0
         -z 0.1

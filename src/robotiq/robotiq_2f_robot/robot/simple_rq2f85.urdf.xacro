@@ -9,7 +9,7 @@
 
 	<xacro:robotiq_2f_85 name="simple_gripper" parent="wrist_3_link" precise_collision="true" adaptive_transmission="false">
 <!--  0.0823 = wrist_3_length = d6 -->
-                <origin xyz="0 0.0823 0" rpy="${pi/-2.0} 0 0"/>
+                <origin xyz="0 0.0823 0" rpy="${pi/-2.0} ${pi/2.0} 0"/>
 	</xacro:robotiq_2f_85>
 
 </robot>
