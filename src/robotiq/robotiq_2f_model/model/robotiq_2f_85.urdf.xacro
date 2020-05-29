@@ -35,9 +35,11 @@
 		</joint>
 		<link name="${name}_base">
 			<inertial>
-				<mass value="0.5"/>
+<!--				<mass value="0.5"/> -->
+				<mass value="0.636951"/>
 				<origin xyz="0 0 ${0.015*0.5}"  />
-				<xacro:cyl_iner radius="0.04" length="0.045" mass="0.5"/>
+<!--				<xacro:cyl_iner radius="0.04" length="0.045" mass="0.5"/> -->
+				<xacro:cyl_iner radius="0.04" length="0.045" mass="0.636951"/>
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 -1.5708 0"/>
@@ -82,13 +84,15 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_right_driver"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="10000" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 		</joint>
 		<link name="${name}_right_driver">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/> -->
+				<mass value="0.018491"/>
 				<origin xyz="0 0.02 0" rpy="0 0 0" />
-				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.018491"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -127,7 +131,7 @@
 		</joint>
 		</xacro:unless>
 		<xacro:if value="${adaptive_transmission}">
-		<joint name="${name}_right_coupler_joint" type="revolute">
+		<joint name="${name}_right_coupler_joint" type="continuous">
 			<origin xyz="0 0.0315 -0.0041" rpy="0 0 0"/>
 			<parent link="${name}_right_driver"/>
 			<child link="${name}_right_coupler"/>
@@ -138,9 +142,11 @@
 
 		<link name="${name}_right_coupler">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/> -->
+                                <mass value="0.027309" />
 				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
-				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.027309"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -172,11 +178,12 @@
                 </gazebo>   
 
 		<joint name="${name}_right_follower_joint" type="revolute">
-			<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/>
-			<parent link="${name}_right_coupler"/>
+<!--			<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/> -->
+                        <origin xyz="0.0 0.037 0.043" rpy="0.0 0.0 0.0"/>
+			<parent link="${name}_right_spring_link"/>
 			<child link="${name}_right_follower"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
@@ -184,18 +191,23 @@
 		</joint>
 		<link name="${name}_right_follower">
 			<inertial>
-				<mass value="0.1"/>
-				<origin xyz="0 -0.018 0.022" />
-				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
+<!--				<mass value="0.1"/> -->
+                                <mass value="0.01" />
+<!--				<origin xyz="0 0 0" /> -->
+				<origin xyz="0 0.018 -0.0065" />
+<!--				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.01"/>
 			</inertial>
 			<visual>
+				<origin xyz="0 0.018 -0.0065" />
 				<geometry>
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/follower.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</visual>
 			<xacro:unless value="${precise_collision}">
 			<collision>
-				<origin xyz="0 -0.01 0.022" rpy="0 0 0"/>
+				<origin xyz="0 0 0" />
+<!--				<origin xyz="0 -0.01 0.022" rpy="0 0 0"/> -->
 				<geometry>
 					<box size="0.002 0.0015 0.0048"/>
 				</geometry>
@@ -203,6 +215,7 @@
 			</xacro:unless>
 			<xacro:if value="${precise_collision}">
 			<collision>
+				<origin xyz="0 0.018 -0.0065" />
 				<geometry>
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/follower.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
@@ -224,11 +237,15 @@
 			</joint>
 			<link name="${name}_right_pad">
 				<inertial>
-					<mass value="0.1"/>
-					<origin xyz="0 -0.022 0.031" />
-					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
+<!--					<mass value="0.1"/> -->
+					<mass value="0.009555"/>
+				        <origin xyz="0 0.018 -0.0065" />
+			<!--		<origin xyz="0 -0.022 0.031" /> -->
+					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.009555"/>
+<!--					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/> -->
 				</inertial>
 				<visual>
+				        <origin xyz="0 0.018 -0.0065" />
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/pad.dae" scale="0.001 0.001 0.001"/>
 					</geometry>
@@ -243,6 +260,7 @@
 				</xacro:unless>
 				<xacro:if value="${precise_collision}">
 				<collision>
+				        <origin xyz="0 0.018 -0.0065" />
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/pad.stl" scale="0.001 0.001 0.001"/>
 					</geometry>
@@ -263,7 +281,7 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_right_spring_link"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
@@ -271,9 +289,11 @@
 		</joint>
 		<link name="${name}_right_spring_link">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/> -->
+				<mass value="0.029951"/>
 				<origin xyz="0 0.018 0.018" rpy="-0.7068 0 0"/>
-				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.029951"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -304,14 +324,6 @@
                     <kd>1.0</kd>
                 </gazebo>  
 
-		<!-- Add
-		<joint name="${name}_right_spring_link_joint2" type="fixed">
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<parent link="${name}_right_spring_link"/>
-			<child link="${name}_right_follower_link"/>
-			<axis xyz="1 0 0"/>
-		</joint> -->
-
 		<!-- left finger -->
 
 		<joint name="${name}_left_driver_joint" type="revolute">
@@ -319,7 +331,7 @@
 			<parent link="${name}_base"/>
 			<child link="${name}_left_driver"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
@@ -327,9 +339,11 @@
 		</joint>
 		<link name="${name}_left_driver">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/>  -->
+				<mass value="0.018491"/>
 				<origin xyz="0 0.02 0" rpy="0 0 0" />
-				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.02" y_dim="0.04" z_dim="0.02" mass="0.018491"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -368,7 +382,7 @@
 		</joint>
 		</xacro:unless>
 		<xacro:if value="${adaptive_transmission}">
-		<joint name="${name}_left_coupler_joint" type="revolute">
+		<joint name="${name}_left_coupler_joint" type="continuous">
 			<origin xyz="0 0.0315 -0.0041" rpy="0 0 0"/>
 			<parent link="${name}_left_driver"/>
 			<child link="${name}_left_coupler"/>
@@ -378,9 +392,11 @@
 		</xacro:if>
 		<link name="${name}_left_coupler">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/> -->
+                                <mass value="0.027309" />
 				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
-				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.03" y_dim="0.065" z_dim="0.02" mass="0.027309"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -389,7 +405,6 @@
 			</visual>
 			<xacro:unless value="${precise_collision}">
 			<collision>
-				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
 				<geometry>
 					<box size="0.03 0.065 0.02"/>
 				</geometry>
@@ -397,6 +412,7 @@
 			</xacro:unless>
 			<xacro:if value="${precise_collision}">
 				<collision>
+				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/coupler.stl" scale="0.001 0.001 0.001"/>
 					</geometry>
@@ -412,11 +428,13 @@
                 </gazebo>  
 
 		<joint name="${name}_left_follower_joint" type="revolute">
-			<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/>
-			<parent link="${name}_left_coupler"/>
+		<!--	<origin xyz="0 0.0061 0.0471" rpy="0 0 0"/>
+			<parent link="${name}_left_coupler"/> -->
+                        <origin xyz="0.0 0.037 0.043" rpy="0.0 0.0 0.0"/>
+			<parent link="${name}_left_spring_link"/>
 			<child link="${name}_left_follower"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
 			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
@@ -424,11 +442,16 @@
 		</joint>
 		<link name="${name}_left_follower">
 			<inertial>
-				<mass value="0.1"/>
-				<origin xyz="0 -0.018 0.022" />
-				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/>
+<!--				<mass value="0.1"/> -->
+                                <mass value="0.01" />
+				<origin xyz="0 0.018 -0.0065" />
+<!--				<origin xyz="0 -0.018 0.022" /> -->
+<!--				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.02" y_dim="0.015" z_dim="0.048" mass="0.01"/>
 			</inertial>
 			<visual>
+				<origin xyz="0 0.018 -0.0065" />
+<!--                                <origin xyz="0 0.01 0.01" /> -->
 				<geometry>
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/follower.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
@@ -443,6 +466,7 @@
 			</xacro:unless>
 			<xacro:if value="${precise_collision}">
 			<collision>
+				<origin xyz="0 0.018 -0.0065" />
 				<geometry>
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/follower.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
@@ -464,11 +488,15 @@
 			</joint>
 			<link name="${name}_left_pad">
 				<inertial>
-					<mass value="0.1"/>
-					<origin xyz="0 -0.022 0.031" />
-					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/>
+<!--					<mass value="0.1"/> -->
+					<mass value="0.009555"/>
+			 	        <origin xyz="0 0.018 -0.0065" />
+<!--					<origin xyz="0 -0.022 0.031" /> -->
+<!--					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.1"/> -->
+					<xacro:box_inertia x_dim="0.02" y_dim="0.008" z_dim="0.036" mass="0.009555"/>
 				</inertial>
 				<visual>
+			 	        <origin xyz="0 0.018 -0.0065" />
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/pad.dae" scale="0.001 0.001 0.001"/>
 					</geometry>
@@ -483,6 +511,7 @@
 				</xacro:unless>
 				<xacro:if value="${precise_collision}">
 				<collision>
+			 	        <origin xyz="0 0.018 -0.0065" />
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/pad.stl" scale="0.001 0.001 0.001"/>
 					</geometry>
@@ -510,19 +539,13 @@
 			</xacro:unless>
 		</joint>
 
-		<!-- Add
-		<joint name="${name}_left_spring_link_joint2" type="fixed">
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<parent link="${name}_left_spring_link"/>
-			<child link="${name}_left_follower_link"/>
-			<axis xyz="1 0 0"/>
-		</joint> -->
-
 		<link name="${name}_left_spring_link">
 			<inertial>
-				<mass value="0.1"/>
+<!--				<mass value="0.1"/> -->
+				<mass value="0.029951"/>
 				<origin xyz="0 0.018 0.018" rpy="-0.7068 0 0"/>
-				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/>
+<!--				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.1"/> -->
+				<xacro:box_inertia x_dim="0.04" y_dim="0.02" z_dim="0.065" mass="0.029951"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -566,10 +589,58 @@
 			</transmission>
 
 			<gazebo>
+	  	        <!--       <joint name='add_right_joint' type='revolute'>
+			                <child>${name}_right_follower</child>
+			                <parent>${name}_right_driver</parent>
+                                        <axis>
+			                   <xyz>0 0 1</xyz>
+			                   <limit>
+			                     <lower>-2.97</lower>
+			                     <upper>2.97</upper>
+                                             <effort>176</effort>
+                                             <velocity>1.91986</velocity>
+			                   </limit>
+			                   <dynamics>
+			                     <spring_reference>0</spring_reference>
+			                     <spring_stiffness>0</spring_stiffness>
+			                   </dynamics>
+			                   <use_parent_model_frame>1</use_parent_model_frame>
+		                        </axis>
+		                </joint>
+	  	                <joint name='add_left_joint' type='revolute'>
+			                <child>${name}_left_follower</child>
+			                <parent>${name}_left_driver</parent>
+		                        <axis>
+			                   <xyz>0 0 -1</xyz>
+			                   <limit>
+			                     <lower>-2.97</lower>
+			                     <upper>2.97</upper>
+                                             <effort>176</effort>
+                                             <velocity>1.91986</velocity>
+			                   </limit>
+			                   <dynamics>
+			                     <spring_reference>0</spring_reference>
+			                     <spring_stiffness>0</spring_stiffness>
+			                   </dynamics>
+			                   <use_parent_model_frame>1</use_parent_model_frame>
+		                        </axis>
+		                </joint> -->
+			<!--	<plugin name="add_right_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+					<joint>${name}_right_driver_joint</joint>
+					<mimicJoint>add_right_joint</mimicJoint>
+					<multiplier>-1</multiplier>
+				</plugin>
+				<plugin name="add_left_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+					<joint>${name}_right_driver_joint</joint>
+					<mimicJoint>add_left_joint</mimicJoint>
+					<multiplier>-1</multiplier>
+				</plugin> -->
+
 				<plugin name="${name}_right_follower_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
 					<joint>${name}_right_driver_joint</joint>
 					<mimicJoint>${name}_right_follower_joint</mimicJoint>
 					<multiplier>-1</multiplier>
+                                        <offset>0.0</offset>
 				</plugin>
 				<plugin name="${name}_right_spring_link_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
 					<joint>${name}_right_driver_joint</joint>
@@ -580,6 +651,7 @@
 					<joint>${name}_right_driver_joint</joint>
 					<mimicJoint>${name}_left_follower_joint</mimicJoint>
 					<multiplier>-1</multiplier>
+                                        <offset>0.0</offset>
 				</plugin>
 				<plugin name="${name}_left_spring_link_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
 					<joint>${name}_right_driver_joint</joint>
@@ -591,6 +663,23 @@
 					<mimicJoint>${name}_left_driver_joint</mimicJoint>
 					<multiplier>1</multiplier>
 				</plugin>
+
+                                 <!-- add for pegasus closed plugin
+				<plugin name="${name}_right_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
+					<joint>add_right_joint</joint>
+                                        <child>${name}_right_follower</child>
+					<parent>${name}_right_spring_link</parent>
+                                        <position>0.0 0.0 0.0</position>
+                                        <rotation>0.00 -0.00 0.00</rotation>
+				</plugin>
+				<plugin name="${name}_left_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
+					<joint>add_left_joint</joint>
+                                        <child>${name}_left_follower</child>
+					<parent>${name}_left_spring_link</parent>
+                                        <position>0.0 0.0 0.0</position>
+                                        <rotation>0.00 -0.00 0.00</rotation>
+				</plugin> -->
+
 			</gazebo>
 		</xacro:unless>
 	</xacro:macro>
