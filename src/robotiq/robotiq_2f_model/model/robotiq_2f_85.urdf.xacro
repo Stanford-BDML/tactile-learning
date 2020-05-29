@@ -70,6 +70,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_base">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -116,6 +117,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_right_driver">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -162,14 +164,15 @@
 			</collision>
 			</xacro:unless>
 			<xacro:if value="${precise_collision}">
-				<collision>
+<!--				<collision>
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/coupler.stl" scale="0.001 0.001 0.001"/>
 					</geometry>
-				</collision>
+				</collision> -->
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_right_coupler">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -185,9 +188,9 @@
 			<axis xyz="1 0 0"/>
 			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
-			<xacro:unless value="${adaptive_transmission}">
+<!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
-			</xacro:unless>
+			</xacro:unless> -->
 		</joint>
 		<link name="${name}_right_follower">
 			<inertial>
@@ -223,6 +226,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_right_follower">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -268,10 +272,11 @@
 				</xacro:if>
 			</link>
                 	<gazebo reference="${name}_right_pad">
-                  	  <implicitSpringDamper>1</implicitSpringDamper>
-                 	   <mu1>100000</mu1>
+                            <selfCollide>true</selfCollide>
+                  	    <implicitSpringDamper>1</implicitSpringDamper>
+                 	    <mu1>100000</mu1>
                 	    <mu2>100000</mu2>
-                 	   <kp>100000000.0</kp>
+                 	    <kp>100000000.0</kp>
                 	    <kd>1.0</kd>
              		</gazebo>  
 		</xacro:if>
@@ -283,9 +288,9 @@
 			<axis xyz="1 0 0"/>
 			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
-			<xacro:unless value="${adaptive_transmission}">
+<!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
-			</xacro:unless>
+			</xacro:unless> -->
 		</joint>
 		<link name="${name}_right_spring_link">
 			<inertial>
@@ -317,6 +322,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_right_spring_link">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -333,9 +339,9 @@
 			<axis xyz="1 0 0"/>
 			<limit lower="${0 * 3.141592 / 180}" upper="${50 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
-			<xacro:unless value="${adaptive_transmission}">
+<!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
-			</xacro:unless>
+			</xacro:unless> -->
 		</joint>
 		<link name="${name}_left_driver">
 			<inertial>
@@ -367,6 +373,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_left_driver">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -411,15 +418,16 @@
 			</collision>
 			</xacro:unless>
 			<xacro:if value="${precise_collision}">
-				<collision>
+<!--				<collision>
 				<origin xyz="0 0.0 0.025" rpy="-1.7 0 0"/>
 					<geometry>
 						<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/coupler.stl" scale="0.001 0.001 0.001"/>
 					</geometry>
-				</collision>
+				</collision> -->
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_left_coupler">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -436,9 +444,9 @@
 			<axis xyz="1 0 0"/>
 			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
 
-			<xacro:unless value="${adaptive_transmission}">
+<!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>
-			</xacro:unless>
+			</xacro:unless> -->
 		</joint>
 		<link name="${name}_left_follower">
 			<inertial>
@@ -474,6 +482,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_left_follower">
+                    <selfCollide>true</selfCollide>
                     <implicitSpringDamper>1</implicitSpringDamper>
                     <mu1>100000</mu1>
                     <mu2>100000</mu2>
@@ -519,6 +528,7 @@
 				</xacro:if>
 			</link>
                 	<gazebo reference="${name}_left_pad">
+                                <selfCollide>true</selfCollide>
                    	        <implicitSpringDamper>1</implicitSpringDamper>
                   	        <mu1>100000</mu1>
                   	        <mu2>100000</mu2>
@@ -534,9 +544,9 @@
 			<axis xyz="1 0 0"/>
 			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="17600" velocity="${110 * 3.141592 / 180}" />
 
-			<xacro:unless value="${adaptive_transmission}">
+<!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="1"/>
-			</xacro:unless>
+			</xacro:unless> -->
 		</joint>
 
 		<link name="${name}_left_spring_link">
@@ -569,6 +579,7 @@
 			</xacro:if>
 		</link>
                 <gazebo reference="${name}_left_spring_link">
+                        <selfCollide>true</selfCollide>
                    	<implicitSpringDamper>1</implicitSpringDamper>
                   	<mu1>100000</mu1>
                   	<mu2>100000</mu2>
@@ -583,6 +594,56 @@
 					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 				</joint>
 				<actuator name="${name}_right_driver_motor">
+					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
+				</actuator>
+			</transmission>
+			<transmission name="${name}_left_driver_trans">
+				<type>transmission_interface/SimpleTransmission</type>
+				<joint name="${name}_left_driver_joint">
+					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				</joint>
+				<actuator name="${name}_left_driver_motor">
+					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
+				</actuator>
+			</transmission>
+			<transmission name="${name}_right_follower_trans">
+				<type>transmission_interface/SimpleTransmission</type>
+				<joint name="${name}_right_follower_joint">
+					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				</joint>
+				<actuator name="${name}_right_follower_motor">
+					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
+				</actuator>
+			</transmission>
+			<transmission name="${name}_left_follower_trans">
+				<type>transmission_interface/SimpleTransmission</type>
+				<joint name="${name}_left_follower_joint">
+					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				</joint>
+				<actuator name="${name}_left_follower_motor">
+					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
+				</actuator>
+			</transmission>
+			<transmission name="${name}_right_spring_link_trans">
+				<type>transmission_interface/SimpleTransmission</type>
+				<joint name="${name}_right_spring_link_joint">
+					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				</joint>
+				<actuator name="${name}_right_spring_link_motor">
+					<mechanicalReduction>1</mechanicalReduction>
+					<hardwareInterface>PositionJointInterface</hardwareInterface>
+				</actuator>
+			</transmission>
+			<transmission name="${name}_left_spring_link_trans">
+				<type>transmission_interface/SimpleTransmission</type>
+				<joint name="${name}_left_spring_link_joint">
+					<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				</joint>
+				<actuator name="${name}_left_spring_link_motor">
 					<mechanicalReduction>1</mechanicalReduction>
 					<hardwareInterface>PositionJointInterface</hardwareInterface>
 				</actuator>
@@ -625,6 +686,7 @@
 			                   <use_parent_model_frame>1</use_parent_model_frame>
 		                        </axis>
 		                </joint> -->
+
 			<!--	<plugin name="add_right_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
 					<joint>${name}_right_driver_joint</joint>
 					<mimicJoint>add_right_joint</mimicJoint>
@@ -634,7 +696,7 @@
 					<joint>${name}_right_driver_joint</joint>
 					<mimicJoint>add_left_joint</mimicJoint>
 					<multiplier>-1</multiplier>
-				</plugin> -->
+				</plugin>
 
 				<plugin name="${name}_right_follower_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
 					<joint>${name}_right_driver_joint</joint>
@@ -662,7 +724,7 @@
 					<joint>${name}_right_driver_joint</joint>
 					<mimicJoint>${name}_left_driver_joint</mimicJoint>
 					<multiplier>1</multiplier>
-				</plugin>
+				</plugin> -->
 
                                  <!-- add for pegasus closed plugin
 				<plugin name="${name}_right_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">

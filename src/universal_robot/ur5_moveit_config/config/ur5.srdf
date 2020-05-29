@@ -61,9 +61,19 @@
    <!-- definition of gripper(add) -->
     <group_state name="close" group="gripper">
         <joint name="simple_gripper_right_driver_joint" value="0.8" />
+        <joint name="simple_gripper_left_driver_joint" value="0.8" />
+        <joint name="simple_gripper_right_follower_joint" value="-0.8" />
+        <joint name="simple_gripper_left_follower_joint" value="-0.8" />
+        <joint name="simple_gripper_right_spring_link_joint" value="0.8" />
+        <joint name="simple_gripper_left_spring_link_joint" value="0.8" />
     </group_state>
     <group_state name="open" group="gripper">
         <joint name="simple_gripper_right_driver_joint" value="0.0" />
+        <joint name="simple_gripper_left_driver_joint" value="0.0" />
+        <joint name="simple_gripper_right_follower_joint" value="0.0" />
+        <joint name="simple_gripper_left_follower_joint" value="0.0" />
+        <joint name="simple_gripper_right_spring_link_joint" value="0.0" />
+        <joint name="simple_gripper_left_spring_link_joint" value="0.0" />
     </group_state>
 
     <!--END EFFECTOR: Purpose: Represent information about an end effector.
@@ -71,11 +81,12 @@
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="fixed_base" type="fixed" parent_frame="world" child_link="base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <passive_joint name="simple_gripper_right_spring_link_joint" />
+
+<!--    <passive_joint name="simple_gripper_right_spring_link_joint" />
     <passive_joint name="simple_gripper_right_follower_joint" />
     <passive_joint name="simple_gripper_left_spring_link_joint" />
     <passive_joint name="simple_gripper_left_follower_joint" />
-    <passive_joint name="simple_gripper_left_driver_joint" />
+    <passive_joint name="simple_gripper_left_driver_joint" /> -->
 
     <!-- Add for add joint
     <passive_joint name="add_right_joint" />

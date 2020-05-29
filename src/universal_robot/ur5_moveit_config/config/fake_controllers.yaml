@@ -13,3 +13,8 @@ controller_list:
   - name: fake_gripper_controller
     joints:
       - simple_gripper_right_driver_joint
+      - simple_gripper_left_driver_joint
+      - simple_gripper_right_follower_joint
+      - simple_gripper_left_follower_joint
+      - simple_gripper_right_spring_link_joint
+      - simple_gripper_left_spring_link_joint

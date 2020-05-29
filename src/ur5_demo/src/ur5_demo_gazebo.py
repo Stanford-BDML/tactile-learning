@@ -147,7 +147,7 @@ def test_move_ur5_continuous():
         time.sleep(INTER_COMMAND_DELAY)
 
 
-curr_demo = 3
+curr_demo = 5
 if __name__ == '__main__': 
     if (curr_demo == 1):
         test_move_home()
