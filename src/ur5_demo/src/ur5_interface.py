@@ -40,6 +40,14 @@ class UR5Interface:
     joint_values_calib = [1.544891846222953, -1.8106006673578534, 2.258661677945332, 
                       -2.0195989461345256, -1.5703836018608142, 2.3299036774634354]
 
+    joint_values_spec = [1.4034008128830147, -1.667990371279239, 2.0688124016401552, -0.40665629147605475, 1.3692966421147243, -1.5738457779422106]
+
+    joint_values_before_grasp = [1.0936292324911197, -1.9619247342409523, 2.284918129311265, -0.3295925202225334, 1.0594761648023008, -1.5717792992464688]
+
+    joint_values_grasp_position = [1.2168549330235976, -1.7469892316131368, 2.1438566966530352, -0.4029605278499071, 1.18284603228705, -1.5726680497015089]
+
+    joint_values_rotate = [1.2271511722945796, -1.7471523185028532, 2.147928955121685, -0.41287096288384983, 1.1990159658338717, -0.25820784403716246]
+
     def __init__(self):
         self.robot = moveit_commander.RobotCommander()
         self.scene = moveit_commander.PlanningSceneInterface()
@@ -131,6 +139,10 @@ class UR5Interface:
         """ get robot end effector pose """
         return self.group.get_current_pose().pose
 
+    def get_rpy(self):
+        """ get robot end effector rpy """
+        return self.group.get_current_rpy()
+
     def get_pose_array(self):
         """ get robot end effector pose as two arrays of position and
         orientation 
@@ -149,6 +161,22 @@ class UR5Interface:
         """ go to robot end effector home pose """
         self.goto_joint_target(self.joint_values_home, wait=wait)
 
+    def goto_before_grasp_pose(self, wait=False):
+        """ go to robot end effector before grasp """
+        self.goto_joint_target(self.joint_values_before_grasp, wait=wait)
+
+    def goto_grasp_position_pose(self, wait=False):
+        """ go to robot end effector grasp position pose """
+        self.goto_joint_target(self.joint_values_grasp_position, wait=wait)
+
+    def goto_rotate_pose(self, wait=False):
+        """ go to robot end effector rotate pose """
+        self.goto_joint_target(self.joint_values_rotate, wait=wait)
+
+    def goto_spec_pose(self, wait=True):
+        """ go to robot spec pose """
+        self.goto_joint_target(self.joint_values_spec, wait=wait)
+
     def goto_calib_home_pose(self):
         """ go to robot end effector home pose for calibration.
             This is basically the same as the home pose but the 
@@ -157,7 +185,7 @@ class UR5Interface:
         """
         self.goto_joint_target(self.joint_values_calib, wait=True)
 
-    def goto_pose_target(self, pose, wait=True):
+    def goto_pose_target(self, pose, wait=False):
         """ go to robot end effector pose target """
         self.group.set_pose_target(pose)
         # simulate in rviz then ask user for feedback

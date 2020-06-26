@@ -17,6 +17,11 @@ import moveit_commander
 
 from ur5_interface import UR5Interface
 from robotiq_interface import RobotiqInterface
+from gazebo_msgs.srv import GetJointProperties
+from gazebo_msgs.srv import ApplyJointEffort
+from gazebo_msgs.srv import JointRequest
+from std_msgs.msg import Float64
+import math
 
 ### Global definitions
 
@@ -76,6 +81,102 @@ def test_robotiq_gripper_gazebo():
     # Command the gripper to go to fully open
     grp.set_named_target('open')
     grp.go(wait=True)
+
+def test():
+    # Initialize the ros node
+    rospy.init_node("test", anonymous=True, disable_signals=True)
+
+    # Instantiage the UR5 interface.
+    ur5 = UR5Interface()
+    grp = moveit_commander.MoveGroupCommander("gripper")
+
+    print(ur5.get_rpy())
+    print(ur5.get_pose())
+    print(ur5.get_joint_values())
+#    print(ur5.get_pose_array())    
+
+def open_by_control():
+    # Initialize the ros node
+    rospy.init_node("open_by_control", anonymous=True, disable_signals=True)
+
+    # Instantiage the UR5 and gripper interface.
+    ur5 = UR5Interface()
+    grp = moveit_commander.MoveGroupCommander("gripper")
+
+    # MoveIt! works well if joint limits are smaller (within -pi, pi)
+    if not ur5.check_joint_limits():
+        raise Exception('Bad joint limits! try running roslaunch with option "limited:=true"')
+
+    eelink_pose_before_grasp = [-0.00545284639771, 0.340081666162, 0.26178413889301, 1.570795, 0, 1.570795]
+    ur5.goto_pose_target(eelink_pose_before_grasp)
+    eelink_pose_grasp_position = [-0.00545284639771, 0.390081666162, 0.26178413889301, 1.570795, 0, 1.570795]
+    ur5.goto_pose_target(eelink_pose_grasp_position)
+
+    grp.set_named_target('close0.4')
+    grp.go(wait=True)
+
+    eelink_pose_after_rotate = [-0.00545284639771, 0.390081666162, 0.26178413889301, 3, 0, 1.570795]
+    ur5.goto_pose_target(eelink_pose_after_rotate)
+    eelink_pose_after_pull = [-0.086040, 0.294412, 0.260207, 3, 0, 1.202130]
+    ur5.goto_pose_target(eelink_pose_after_pull)
+
+    grp.set_named_target('open')
+    grp.go(wait=True)
+
+def get_ref_callback(data):
+    global angle_ref
+    angle_ref = data.data
+
+def test_robotiq_gripper_gazebo_force():
+    # Initialize the ros node
+    Ts = 0.001
+    omega = 2*math.pi*2
+
+    rospy.init_node("test_robotiq_gripper_gazebo_force", anonymous=True, disable_signals=True)
+    rate = rospy.Rate(1.0/Ts)
+    rospy.Subscriber('angle_ref', Float64, get_ref_callback)
+
+    get_angle = rospy.ServiceProxy('/gazebo/get_joint_properties', GetJointProperties)
+    clear_torque = rospy.ServiceProxy('/gazebo/clear_joint_forces', JointRequest)
+    set_torque = rospy.ServiceProxy('/gazebo/apply_joint_effort', ApplyJointEffort)
+
+    Kd = 3*omega**1
+    Kp = 3*omega**2
+    Ki = 1*omega**3
+
+    torque = 0
+    u_z = [0, 0]
+    y_z = [0, 0]
+    d_init = True
+
+    angle_ref = 0
+    
+    while not rospy.is_shutdown():
+       angle = get_angle(joint_name=joint_name).position[0]
+       u_z[0] = angle_ref - angle
+       y_z[0] = Ts*sum(u_z)/2 + y_z[1]
+
+       if d_init:
+         torque = Kp*u_z[0] + Ki*y_z[0]
+         d_init = False
+       else:
+         torque = Kp*u_z[0] + Ki*y_z[0] + Kd*(u_z[0]-u_z[1])/Ts
+
+       u_z[1] = u_z[0]
+       y_z[1] = y_z[0]
+
+       clear_torque(joint_name=joint_name)
+       set_torque(joint_name=joint_name, effort=torque, duration=rospy.Duration(-1))
+       rate.sleep()
+
+    # Instantiage the Robotiq gripper interface.
+#    grp = moveit_commander.MoveGroupCommander("gripper")
+
+    # set torque to each joint
+#    rospy.wait_for_service('/gazebo/apply_joint_effort')
+#    set_torque("simple_gripper_right_follower_joint", torque, rospy.Duration.from_sec(0), rospy.Duration.from_sec(-1))
+#    clear_torque("simple_gripper_right_driver_joint")
+
 
 def test_move_ur5():
     rospy.init_node("test_move_ur5", anonymous=True, disable_signals=True)
@@ -146,8 +247,7 @@ def test_move_ur5_continuous():
         ur5.goto_pose_target(P3_pose, wait=False)
         time.sleep(INTER_COMMAND_DELAY)
 
-
-curr_demo = 5
+curr_demo = 8
 if __name__ == '__main__': 
     if (curr_demo == 1):
         test_move_home()
@@ -159,3 +259,9 @@ if __name__ == '__main__':
         test_move_ur5_continuous()
     elif (curr_demo == 5):
         test_robotiq_gripper_gazebo()
+    elif (curr_demo == 6):
+        test_robotiq_gripper_gazebo_force()
+    elif (curr_demo == 7):
+        test()
+    elif (curr_demo == 8):
+        open_by_control()

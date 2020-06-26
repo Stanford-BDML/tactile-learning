@@ -1,0 +1,357 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics name='default_physics' default='0' type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <audio>
+      <device>default</device>
+    </audio>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <state world_name='default'>
+      <sim_time>355 173000000</sim_time>
+      <real_time>359 155055589</real_time>
+      <wall_time>1592506259 537736258</wall_time>
+      <iterations>355173</iterations>
+      <model name='demo_joint_stiffness'>
+        <pose frame=''>0.409681 -3.10226 0.06 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link_base'>
+          <pose frame=''>0.409681 -3.10226 0.06 0 -0 0</pose>
+          <velocity>0 -0 0 0 -0 0</velocity>
+          <acceleration>-0 -0 -0 0 -0 0</acceleration>
+          <wrench>-0 -0 -2e-06 0 -0 0</wrench>
+        </link>
+        <link name='link_high_stiffness'>
+          <pose frame=''>0.529681 -3.10225 0.210055 -0.169841 0 0</pose>
+          <velocity>0 0.00152 0.012629 1.55277 -0 0</velocity>
+          <acceleration>0 -12.1607 -22.0005 3.04814 -0 0</acceleration>
+          <wrench>0 -12.1607 -22.0005 0 -0 0</wrench>
+        </link>
+        <link name='link_low_stiffness'>
+          <pose frame=''>0.289681 -3.10226 0.21 0.363474 -0 0</pose>
+          <velocity>0 -3.7e-05 9.9e-05 -1.31846 0 0</velocity>
+          <acceleration>0 0.221148 -0.138622 -1.30949 0 0</acceleration>
+          <wrench>0 0.221148 -0.138622 0 -0 0</wrench>
+        </link>
+        <link name='link_medium_stiffness'>
+          <pose frame=''>0.409681 -3.10226 0.21 0.784124 -0 0</pose>
+          <velocity>-0 -4e-06 4e-06 -0.231451 -0 0</velocity>
+          <acceleration>1e-06 2.39532 2.38296 -3.02361 4.6e-05 -3.8e-05</acceleration>
+          <wrench>1e-06 2.39532 2.38296 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='ground_plane'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <model name='demo_joint_stiffness'>
+      <pose frame=''>0.409681 -3.10226 0.06 0 -0 0</pose>
+      <link name='link_base'>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>1.2</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>3.64</iyy>
+            <iyz>0</iyz>
+            <izz>4.6</izz>
+          </inertia>
+        </inertial>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <enable_wind>0</enable_wind>
+        <visual name='visual_base'>
+          <geometry>
+            <mesh>
+              <uri>model://demo_joint_stiffness/meshes/base_model.dae</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision_base'>
+          <geometry>
+            <box>
+              <size>0.65 0.36 0.12</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <link name='link_high_stiffness'>
+        <gravity>0</gravity>
+        <pose frame=''>0.12 0 0.15 0.785398 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0.12 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.0051</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0051</iyy>
+            <iyz>0</iyz>
+            <izz>0.0006</izz>
+          </inertia>
+        </inertial>
+        <visual name='visual_high_stiffness'>
+          <pose frame=''>0 0 -0.15 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://demo_joint_stiffness/meshes/arm.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <lighting>1</lighting>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Orange</name>
+            </script>
+          </material>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_high_stiffness' type='revolute'>
+        <parent>link_base</parent>
+        <child>link_high_stiffness</child>
+        <pose frame=''>0 0 0 -0.15 0 0</pose>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>-0.785398</spring_reference>
+            <spring_stiffness>7</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='link_medium_stiffness'>
+        <gravity>0</gravity>
+        <pose frame=''>0 0 0.15 0.785398 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0.12 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.0051</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0051</iyy>
+            <iyz>0</iyz>
+            <izz>0.0006</izz>
+          </inertia>
+        </inertial>
+        <visual name='visual_medium_stiffness'>
+          <pose frame=''>0 0 -0.15 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://demo_joint_stiffness/meshes/arm.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <lighting>1</lighting>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Orange</name>
+            </script>
+          </material>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_medium_stiffness' type='revolute'>
+        <parent>link_base</parent>
+        <child>link_medium_stiffness</child>
+        <pose frame=''>0 0 0 -0.15 0 0</pose>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>-0.785398</spring_reference>
+            <spring_stiffness>0.7</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='link_low_stiffness'>
+        <gravity>0</gravity>
+        <pose frame=''>-0.12 0 0.15 0.785398 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0.12 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.0051</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0051</iyy>
+            <iyz>0</iyz>
+            <izz>0.0006</izz>
+          </inertia>
+        </inertial>
+        <visual name='visual_low_stiffness'>
+          <pose frame=''>0 0 -0.15 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://demo_joint_stiffness/meshes/arm.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <lighting>1</lighting>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Orange</name>
+            </script>
+          </material>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_low_stiffness' type='revolute'>
+        <parent>link_base</parent>
+        <child>link_low_stiffness</child>
+        <pose frame=''>0 0 0 -0.15 0 0</pose>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>-0.785398</spring_reference>
+            <spring_stiffness>0.07</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <allow_auto_disable>1</allow_auto_disable>
+    </model>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>0.325601 -2.88259 1.68687 -8e-06 1.5698 -2.89099</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>

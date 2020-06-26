@@ -1,5 +1,5 @@
 arm_controller:
-  type: position_controllers/JointTrajectoryController
+  type: position_controllers/JointTrajectoryController #"JointTrajectoryController" is used for control from Moveit.
   joints:
      - shoulder_pan_joint
      - shoulder_lift_joint
@@ -16,7 +16,7 @@ arm_controller:
       wrist_1_joint: {trajectory: 0.1, goal: 0.1}
       wrist_2_joint: {trajectory: 0.1, goal: 0.1}
       wrist_3_joint: {trajectory: 0.1, goal: 0.1}
-  pid_gains:
+  gains:
       shoulder_pan_joint: {p: 100.0, i: 0.01, d: 10.0}
       shoulder_lift_joint: {p: 100.0, i: 0.01, d: 10.0}
       elbow_joint: {p: 100.0, i: 0.01, d: 10.0}
@@ -26,6 +26,7 @@ arm_controller:
   stop_trajectory_duration: 0.5
   state_publish_rate:  25
   action_monitor_rate: 10
+
 joint_group_position_controller:
   type: position_controllers/JointGroupPositionController
   joints:
@@ -38,7 +39,8 @@ joint_group_position_controller:
 
 #gripper controller(add)
 gripper_controller:
-  type: position_controllers/JointTrajectoryController
+  type: effort_controllers/JointTrajectoryController
+#  type: position_controllers/JointTrajectoryController
   joints:
      - simple_gripper_right_driver_joint
      - simple_gripper_left_driver_joint
@@ -56,13 +58,13 @@ gripper_controller:
       simple_gripper_left_follower_joint: {trajectory: 0.1, goal: 0.1}
       simple_gripper_right_spring_link_joint: {trajectory: 0.1, goal: 0.1}
       simple_gripper_left_spring_link_joint: {trajectory: 0.1, goal: 0.1}
-  pid_gains:
-      simple_gripper_right_driver_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
-      simple_gripper_left_driver_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
-      simple_gripper_right_follower_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
-      simple_gripper_left_follower_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
-      simple_gripper_right_spring_link_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
-      simple_gripper_left_spring_link_joint: {p: 20.0, i: 0.1, d: 0.0, i_clamp: 0.2}
+  gains:
+      simple_gripper_right_driver_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
+      simple_gripper_left_driver_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
+      simple_gripper_right_follower_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
+      simple_gripper_left_follower_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
+      simple_gripper_right_spring_link_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
+      simple_gripper_left_spring_link_joint: {p: 1000.0, i: 0.1, d: 0.01, i_clamp: 0.2}
   antiwindup: false
   publish_state: true
   stop_trajectory_duration: 0.5

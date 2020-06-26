@@ -2,6 +2,7 @@ controller_list:
   - name: "arm_controller"
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
+    default: true
     joints:
       - shoulder_pan_joint
       - shoulder_lift_joint
@@ -9,10 +10,14 @@ controller_list:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
+
   - name: "gripper_controller"
+#    action_ns: gripper_action
+#    type: GripperCommand
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true
+#    parallel: true
     joints:
       - simple_gripper_right_driver_joint
       - simple_gripper_left_driver_joint
@@ -20,3 +25,4 @@ controller_list:
       - simple_gripper_left_follower_joint
       - simple_gripper_right_spring_link_joint
       - simple_gripper_left_spring_link_joint
+
