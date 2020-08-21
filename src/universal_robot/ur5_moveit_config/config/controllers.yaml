@@ -1,5 +1,6 @@
 controller_list:
-  - name: "arm_controller"
+  - name: "pos_traj_controller" #"vel_traj_controller" or "pos_traj_controller"
+#  - name: "arm_controller"
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true

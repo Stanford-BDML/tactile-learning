@@ -1,0 +1,10 @@
+<launch>
+   <arg name="controller" default="pos_vel"/> <!-- 'pos' or 'pos_vel' or 'vel' or 'traj_vel'-->
+
+    <!-- Load the parameters for the algorithm -->
+    <rosparam command="load" file="$(find ur_door_opening)/config/door_opening_params.yaml" />
+
+    <!-- Launch the training system -->
+    <node pkg="ur_door_opening" name="ur_door_opening" type="gazebo_execution.py" output="screen" args="$(arg controller)"/>
+
+</launch>

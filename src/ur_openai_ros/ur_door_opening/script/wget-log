@@ -1,0 +1,11 @@
+--2020-07-28 21:11:36--  https://developer.nvidia.com/cuda-downloads?target_os=Linux
+Resolving developer.nvidia.com (developer.nvidia.com)... 152.199.0.24
+Connecting to developer.nvidia.com (developer.nvidia.com)|152.199.0.24|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘cuda-downloads?target_os=Linux’
+
+cuda-downloads?target_os=Linux                      [<=>                                                                                                  ]       0  --.-KB/s               cuda-downloads?target_os=Linux                      [ <=>                                                                                                 ] 133.26K  --.-KB/s    in 0.07s   
+
+2020-07-28 21:11:37 (1.79 MB/s) - ‘cuda-downloads?target_os=Linux’ saved [136454]
+
