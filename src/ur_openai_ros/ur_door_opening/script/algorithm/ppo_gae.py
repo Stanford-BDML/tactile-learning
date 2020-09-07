@@ -21,9 +21,10 @@ class PPOGAEAgent(object):
         
         self._build_graph()
         self._init_session()
+        self.counter = 0
 
         # load the parameters 
-        #self.saver.restore(self.sess, './results/ppo_with_gae_model-20')
+        self.saver.restore(self.sess, './results/ppo_with_gae_model-500') #50
 
     def _build_graph(self):
         self.g = tf.Graph()
@@ -37,9 +38,7 @@ class PPOGAEAgent(object):
             self.init = tf.global_variables_initializer()
             self.variables = tf.global_variables()  
             # Create a saver object which will save all the variables
-            #self.saver = tf.train.Saver()
-        
-
+            self.saver = tf.train.Saver(max_to_keep=10)
             
     def _placeholders(self):
         # observations, actions and advantages:
@@ -158,7 +157,10 @@ class PPOGAEAgent(object):
     def get_action(self, obs): # SAMPLE FROM POLICY
         feed_dict = {self.obs_ph: obs}
         sampled_action = self.sess.run(self.sample_action,feed_dict=feed_dict)
-        return sampled_action[0]
+        return sampled_action[0] / 500 # 100(~20200904), 300(20200905~) 
+# /10:   [action]', array([-0.01992016,  0.10500866,  0.00853405,  0.02726892, -0.12092558, 0.02108609])
+# /1000: [action]', array([-1.9920163e-04,  1.0500867e-03,  8.5340682e-05,  2.7268915e-04, -1.2092555e-03,  2.1086067e-04])
+#        return sampled_action[0]  # default
     
     def control(self, obs): # COMPUTE MEAN
         feed_dict = {self.obs_ph: obs}
@@ -197,7 +199,30 @@ class PPOGAEAgent(object):
         policy_loss, value_loss, kl, entropy  = self.sess.run([self.policy_loss, self.value_loss, self.kl, self.entropy], feed_dict)
         
         # save the parameters
-        #self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=20)
+	self.counter = self.counter + 1
+
+        if self.counter == 50:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=50)
+        elif self.counter == 100:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=100)
+        elif self.counter == 150:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=150)
+        elif self.counter == 200:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=200)
+        elif self.counter == 250:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=250)
+        elif self.counter == 300:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=300)
+        elif self.counter == 350:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=350)
+        elif self.counter == 400:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=400)
+        elif self.counter == 450:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=450)
+        elif self.counter == 500:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=500)
+#        else:
+
         return policy_loss, value_loss, kl, entropy
     
     def close_sess(self):

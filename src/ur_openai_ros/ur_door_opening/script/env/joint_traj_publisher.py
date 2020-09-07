@@ -26,6 +26,9 @@ class JointTrajPub(object):
         	self._ctrl_conn.load_controllers("vel_traj_controller")
         	self._joint_traj_pub = rospy.Publisher('/vel_traj_controller/command', JointTrajectory, queue_size=10)
 
+#       	self._ctrl_conn.load_controllers("grp_controller")
+       	self._grp_pub = rospy.Publisher('/gripper_controller/command', JointTrajectory, queue_size=10)
+
     def set_init_pose(self, init_pose):
     	"""
     	Sets joints to initial position [0,0,0]
@@ -58,14 +61,17 @@ class JointTrajPub(object):
     	vel_cmd.header.stamp = rospy.Time.now()
     	# create a JTP instance and configure it
     	jtp = JointTrajectoryPoint(positions=[0]*6, velocities=[0]*6 , time_from_start=rospy.Duration(.0))
-    	jtp.velocities = [joints_array[0], joints_array[1], joints_array[2], joints_array[3], joints_array[4], joints_array[5] ]
+#    	jtp.velocities = [joints_array[0], joints_array[1], joints_array[2], joints_array[3], joints_array[4], joints_array[5] ]
+    	jtp.positions = [joints_array[0], joints_array[1], joints_array[2], joints_array[3], joints_array[4], joints_array[5] ]
+#	print("jtp", jtp)
     	
     	# setup the reset of the pt
     	vel_cmd.points =[jtp]
     	self._joint_traj_pub.publish(vel_cmd)
+#    	print("vel_cmd", vel_cmd)
 
-    def jointTrajectoryCommand(self, joints_array):
-    	rospy.loginfo("jointTrajectoryCommand")
+    def jointTrajectoryCommand(self, joints_array): # dtype=float32), <type 'numpy.ndarray'>
+#    	rospy.loginfo("jointTrajectoryCommand")
     	try:    
     	    rospy.loginfo (rospy.get_rostime().to_sec())
     	    while rospy.get_rostime().to_sec() == 0.0:
@@ -82,8 +88,24 @@ class JointTrajPub(object):
     	    jt.joint_names.append("wrist_2_joint")
     	    jt.joint_names.append("wrist_3_joint")
     	    	    
-    	    dt = 0.01
-    	    p = JointTrajectoryPoint()
+    	    dt = 0.1 	#default 0.01
+    	    p = JointTrajectoryPoint()	
+### before_grasp seq56(0.01), 43(0.1), 375(1, 7.5s)
+#    	    p.positions.append(1.09)
+#    	    p.positions.append(-1.96)
+#    	    p.positions.append(2.28)
+#    	    p.positions.append(-0.33)
+#    	    p.positions.append(1.06)
+#    	    p.positions.append(-1.57)
+### grasp_position seq22(0.01, 0.64s), 372(1)
+#    	    p.positions.append(1.22)
+#    	    p.positions.append(-1.75)
+#    	    p.positions.append(2.14)
+#    	    p.positions.append(-0.40)
+#    	    p.positions.append(1.18)
+#    	    p.positions.append(-1.57)
+### original
+    	    print("joints_array[0]:", joints_array[0])
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])
     	    p.positions.append(joints_array[2])
@@ -94,8 +116,53 @@ class JointTrajPub(object):
 
     	    # set duration
     	    jt.points[0].time_from_start = rospy.Duration.from_sec(dt)
-    	    rospy.loginfo("Test: velocities")
+
+#    	    current_controller_type =  rospy.get_param("/control_type")
+#    	    if (current_controller_type == "pos") or (current_controller_type == "traj_pos"):
+#    	    	rospy.loginfo("Test: positions")
+#    	    else:
+#    	    	rospy.loginfo("Test: velocities")
+        	
+#    	    rospy.loginfo("Test: velocities")
+
     	    self._joint_traj_pub.publish(jt)
+#	    print("[jt]:", jt, type(jt))	# type <class 'trajectory_msgs.msg._JointTrajectory.JointTrajectory'>
+#	    print("[joints_array]:", joints_array, type(joints_array))
+
+    	except rospy.ROSInterruptException: pass
+
+    def GrpCommand(self, joints_array): # dtype=float32), <type 'numpy.ndarray'>
+#    	rospy.loginfo("GrpCommand")
+    	try:    
+    	    rospy.loginfo (rospy.get_rostime().to_sec())
+    	    while rospy.get_rostime().to_sec() == 0.0:
+    	    	time.sleep(0.1)
+    	    	rospy.loginfo (rospy.get_rostime().to_sec())
+
+    	    jt = JointTrajectory()
+    	    jt.header.stamp = rospy.Time.now()
+    	    jt.header.frame_id = "grp"
+    	    jt.joint_names.append("simple_gripper_right_driver_joint")
+    	    jt.joint_names.append("simple_gripper_left_driver_joint")
+    	    jt.joint_names.append("simple_gripper_right_follower_joint")
+    	    jt.joint_names.append("simple_gripper_left_follower_joint")
+    	    jt.joint_names.append("simple_gripper_right_spring_link_joint")
+    	    jt.joint_names.append("simple_gripper_left_spring_link_joint")
+    	    	    
+    	    dt = 0.1 	#default 0.01
+    	    p = JointTrajectoryPoint()	
+    	    p.positions.append(joints_array[0])
+    	    p.positions.append(joints_array[1])
+    	    p.positions.append(joints_array[2])
+    	    p.positions.append(joints_array[3])
+    	    p.positions.append(joints_array[4])
+    	    p.positions.append(joints_array[5])
+    	    jt.points.append(p)
+
+    	    # set duration
+    	    jt.points[0].time_from_start = rospy.Duration.from_sec(dt)
+
+    	    self._grp_pub.publish(jt)
 
     	except rospy.ROSInterruptException: pass
 

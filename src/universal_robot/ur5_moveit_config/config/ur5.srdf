@@ -106,6 +106,14 @@
         <joint name="wrist_2_joint" value="1.18284603228705" />
         <joint name="wrist_3_joint" value="-0.25820784403716246" />
     </group_state>
+    <group_state name="after_pull" group="manipulator">
+        <joint name="elbow_joint" value="2.277911783767653" />
+        <joint name="shoulder_lift_joint" value="-1.9340882496918201" />
+        <joint name="shoulder_pan_joint" value="1.5997938851995377" />
+        <joint name="wrist_1_joint" value="-0.34604704175714396" />
+        <joint name="wrist_2_joint" value="1.9609160463454813" />
+        <joint name="wrist_3_joint" value="-0.14887166325512347" />
+    </group_state>
 
    <!-- definition of gripper(add) -->
     <group_state name="close0.8" group="gripper">

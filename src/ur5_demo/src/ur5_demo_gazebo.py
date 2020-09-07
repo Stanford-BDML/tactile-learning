@@ -119,6 +119,7 @@ def open_by_control():
     ur5.goto_pose_target(eelink_pose_after_rotate)
     eelink_pose_after_pull = [-0.086040, 0.294412, 0.260207, 3, 0, 1.202130]
     ur5.goto_pose_target(eelink_pose_after_pull)
+    print(ur5.get_joint_values())
 
     grp.set_named_target('open')
     grp.go(wait=True)

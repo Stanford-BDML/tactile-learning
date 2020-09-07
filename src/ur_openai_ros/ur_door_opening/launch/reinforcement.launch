@@ -4,7 +4,7 @@
     <!-- Load the parameters for the algorithm -->
     <rosparam command="load" file="$(find ur_door_opening)/config/door_opening_params.yaml" />
 
-    <!-- Launch the training system -->
+    <!-- Launch the training system   -->
     <node pkg="ur_door_opening" name="ur_door_opening" type="gazebo_execution.py" output="screen" args="$(arg controller)"/>
 
 </launch>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- By default, we are not in debug mode -->
+ <arg name="paused" default="false"/>
+ <arg name="gui" default="true"/>
+ <arg name="debug" default="false" />
+ <arg name="limited" default="true"/>
+ <arg name="sim" default="true"/>
+ <arg name="controller" default="traj_pos"/> <!-- 'pos' or 'traj_pos' or 'vel' or 'traj_vel'-->
+
+ <!-- Load Gazebo-->
+  <include file="$(find ur_gazebo)/launch/ur5.launch">
+    <arg name="limited" value="$(arg limited)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- Load moveit planner
+  <include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch">
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="limited" value="$(arg limited)"/>
+  </include> -->
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node
+  <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include> -->
+
+  <!-- Load the parameters for the algorithm -->
+  <rosparam command="load" file="$(find ur_door_opening)/config/door_opening_params.yaml" />
+
+  <!-- Launch the training system -->
+  <node pkg="ur_door_opening" name="ur_door_opening" type="gazebo_execution.py" output="screen" args="$(arg controller)"/>
+
+</launch>

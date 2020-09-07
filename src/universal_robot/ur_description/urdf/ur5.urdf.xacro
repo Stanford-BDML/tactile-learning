@@ -96,11 +96,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/base.stl" />
         </geometry>
-      </collision>
+      </collision>  -->
       <xacro:c_inertia radius="0.06" length="0.05" mass="${base_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -135,11 +135,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/shoulder.stl" />
         </geometry>
-      </collision>
+      </collision>  -->
       <xacro:c_inertia radius="0.06" length="0.15" mass="${shoulder_mass}">
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -174,11 +174,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/upperarm.stl" />
         </geometry>
-      </collision>
+      </collision>  -->
       <xacro:c_inertia radius="0.06" length="0.56" mass="${upper_arm_mass}">
         <origin xyz="0.0 0.0 0.28" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -213,11 +213,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/forearm.stl" />
         </geometry>
-      </collision>
+      </collision>  -->
       <xacro:c_inertia radius="0.06" length="${-a3}" mass="${forearm_mass}">
         <origin xyz="0.0 0.0 ${-a3/2}" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -252,11 +252,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist1.stl" />
         </geometry>
-      </collision>
+      </collision> -->
       <xacro:c_inertia radius="0.06" length="0.12" mass="${wrist_1_mass}">
         <origin xyz="0.0 ${wrist_1_length} 0.0" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -291,11 +291,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist2.stl" />
         </geometry>
-      </collision>
+      </collision> -->
       <xacro:c_inertia radius="0.06" length="0.12" mass="${wrist_2_mass}">
         <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0 0 0" />
       </xacro:c_inertia>
@@ -307,7 +307,7 @@
       <origin xyz="0.0 0.0 ${wrist_2_length}" rpy="0.0 0.0 0.0" />
       <axis xyz="0 1 0" />
       <xacro:unless value="${joint_limited}">
-        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="0.001" velocity="3.2"/>
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="28.0" velocity="3.2"/>
 <!--        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="28.0" velocity="3.2"/> -->
         <xacro:if value="${safety_limits}">
           <safety_controller soft_lower_limit="${-2.0 * pi + safety_pos_margin}" soft_upper_limit="${2.0 * pi - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
@@ -331,11 +331,11 @@
           <color rgba="0.7 0.7 0.7 1.0"/>
         </material>
       </visual>
-      <collision>
+<!--      <collision>
         <geometry>
           <mesh filename="package://ur_description/meshes/ur5/collision/wrist3.stl" />
         </geometry>
-      </collision>
+      </collision> -->
       <xacro:c_inertia radius="0.0375" length="0.0345" mass="${wrist_3_mass}">
         <origin xyz="0.0 ${wrist_3_length - 0.0345/2} 0.0" rpy="${pi/2} 0 0" />
       </xacro:c_inertia>
@@ -346,6 +346,19 @@
       <child link = "${prefix}ee_link" />
       <origin xyz="0.0 ${wrist_3_length} 0.0" rpy="0.0 0.0 ${pi/2.0}" />
     </joint>
+
+    <gazebo reference="${prefix}wrist_3_joint">
+        <provideFeedback>true</provideFeedback>
+    </gazebo>
+
+    <!-- The ft_sensor plugin -->  
+    <gazebo>
+        <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
+            <updateRate>0</updateRate>	<!-- updateRate must be 0 for avoiding stop when reset the simulation -->
+            <topicName>ft_sensor_topic</topicName>
+            <jointName>wrist_3_joint</jointName>
+        </plugin>
+    </gazebo>
 
     <link name="${prefix}ee_link">
       <collision>

@@ -19,6 +19,9 @@ max_height: 3.0   # in meters
 min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
 
+force_limit: 20 # 300 ~ over 1000 in position control
+torque_limit: 5 # 30 ~  in position control
+
 observations: # Observations you want to use for the learning
   - shp_joint_ang
   - shl_joint_ang
@@ -35,16 +38,71 @@ observations: # Observations you want to use for the learning
   - eef_x
   - eef_y
   - eef_z
+  - force_x
+  - force_y
+  - force_z
+  - torque_x
+  - torque_y
+  - torque_z
 
 joint_names: ['shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
 
-init_joint_pose:
-  shp: 1.09
-  shl: -1.96
-  elb: 2.28
-  wr1: -0.33
-  wr2: 1.06
-  wr3: -1.57
+init_joint_pose0:
+  shp: 0.42113088235807705
+  shl: -2.499894322410209
+  elb: 2.465940488809082
+  wr1: 0.019181638229937903
+  wr2: 0.3869327391356494
+  wr3: -1.561166435896597
+
+init_joint_pose1:
+  shp: 1.0936292324911197
+  shl: -1.9619247342409523
+  elb: 2.284918129311265
+  wr1: -0.3295925202225334
+  wr2: 1.0594761648023008
+  wr3: -1.5717792992464688
+
+init_joint_pose2:
+  shp: 1.2168549330235976
+  shl: -1.7469892316131368
+  elb: 2.1438566966530352
+  wr1: -0.4029605278499071
+  wr2: 1.18284603228705
+  wr3: -1.5726680497015089
+
+eelink_pose_after_rotate:
+  shp: 1.2168549330235976
+  shl: -1.7469892316131368
+  elb: 2.1438566966530352
+  wr1: -0.4029605278499071
+  wr2: 1.18284603228705
+  wr3: -0.25820784403716246
+
+eelink_pose_after_pull:
+  shp: 1.5997938851995377
+  shl: -1.9340882496918201
+  elb: 2.277911783767653
+  wr1: -0.34604704175714396
+  wr2: 1.9609160463454813
+  wr3: -0.14887166325512347
+
+init_grp_pose1:
+  r_drive: 0
+  l_drive: 0
+  r_follower: 0
+  l_follower: 0
+  r_spring: 0
+  l_spring: 0
+
+init_grp_pose2:
+  r_drive: 0.3
+  l_drive: 0.3
+  r_follower: -0.3
+  l_follower: -0.3
+  r_spring: 0.3
+  l_spring: 0.3
+# last time: 0.35NG 0.38, 0.4NG
 
 joint_limits_array:
   shp_max: 3.14

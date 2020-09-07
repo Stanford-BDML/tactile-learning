@@ -48,6 +48,8 @@ class UR5Interface:
 
     joint_values_rotate = [1.2271511722945796, -1.7471523185028532, 2.147928955121685, -0.41287096288384983, 1.1990159658338717, -0.25820784403716246]
 
+    joint_after_pull = [1.5997938851995377, -1.9340882496918201, 2.277911783767653, -0.34604704175714396, 1.9609160463454813, -0.14887166325512347]
+
     def __init__(self):
         self.robot = moveit_commander.RobotCommander()
         self.scene = moveit_commander.PlanningSceneInterface()

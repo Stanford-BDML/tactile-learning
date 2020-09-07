@@ -47,7 +47,8 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/base.dae"/>
 				</geometry>
 			</visual>
-			<xacro:unless value="${precise_collision}">
+
+<!--			<xacro:unless value="${precise_collision}">
 			<collision>
 				<origin xyz="0 0 0.015" rpy="0 0 0"/>
 				<geometry>
@@ -67,7 +68,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/base.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</collision>
-			</xacro:if>
+			</xacro:if> -->
 		</link>
                 <gazebo reference="${name}_base">
                     <selfCollide>true</selfCollide>
@@ -100,7 +101,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/driver.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</visual>
-			<xacro:unless value="${precise_collision}">
+<!--			<xacro:unless value="${precise_collision}">
 			<collision>
 				<origin xyz="0 0.01 0" rpy="-0.1 0 0"/>
 				<geometry>
@@ -114,7 +115,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/driver.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</collision>
-			</xacro:if>
+			</xacro:if> -->
 		</link>
                 <gazebo reference="${name}_right_driver">
                     <selfCollide>true</selfCollide>
@@ -208,9 +209,9 @@
 				</geometry>
 			</visual>
 			<xacro:unless value="${precise_collision}">
+
 			<collision>
 				<origin xyz="0 0 0" />
-<!--				<origin xyz="0 -0.01 0.022" rpy="0 0 0"/> -->
 				<geometry>
 					<box size="0.002 0.0015 0.0048"/>
 				</geometry>
@@ -313,7 +314,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/spring_link.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</visual>
-			<xacro:unless value="${precise_collision}">
+<!--			<xacro:unless value="${precise_collision}">
 			<collision>
 				<origin xyz="0 0.025 0.015" rpy="-0.7068 0 0"/>
 				<geometry>
@@ -327,7 +328,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/spring_link.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</collision>
-			</xacro:if>
+			</xacro:if> -->
 		</link>
                 <gazebo reference="${name}_right_spring_link">
                     <selfCollide>true</selfCollide>
@@ -364,7 +365,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/driver.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</visual>
-			<xacro:unless value="${precise_collision}">
+<!--			<xacro:unless value="${precise_collision}">
 			<collision>
 				<origin xyz="0 0.01 0" rpy="-0.1 0 0"/>
 				<geometry>
@@ -378,7 +379,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/driver.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</collision>
-			</xacro:if>
+			</xacro:if>  -->
 		</link>
                 <gazebo reference="${name}_left_driver">
                     <selfCollide>true</selfCollide>
@@ -578,7 +579,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/visual/spring_link.dae" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</visual>
-			<xacro:unless value="${precise_collision}">
+<!--			<xacro:unless value="${precise_collision}">
 			<collision>
 				<origin xyz="0 0.025 0.015" rpy="-0.7068 0 0"/>
 				<geometry>
@@ -592,7 +593,7 @@
 					<mesh filename="package://robotiq_2f_model/model/meshes/2f85/collision/spring_link.stl" scale="0.001 0.001 0.001"/>
 				</geometry>
 			</collision>
-			</xacro:if>
+			</xacro:if>  -->
 		</link>
                 <gazebo reference="${name}_left_spring_link">
                         <selfCollide>true</selfCollide>
@@ -777,12 +778,14 @@
                                         <gripper_link>${name}_left_follower</gripper_link>
                                   </arm>
 	                          <forces_angle_tolerance>100</forces_angle_tolerance>
-	                          <update_rate>2</update_rate>
-	                          <grip_count_threshold>1</grip_count_threshold>
-	                          <max_grip_count>2</max_grip_count>
+	                          <update_rate>0.01</update_rate>
+<!-- /pos_traj_controller/command = 100Hz, /gazebo/model_states & /gazebo/link_states = 1kHz, /joint_states = 50Hz -->
+	                          <grip_count_threshold>0.01</grip_count_threshold>
+	                          <max_grip_count>1</max_grip_count>
 	                          <release_tolerance>0.005</release_tolerance>
 	                          <disable_collisions_on_attach>true</disable_collisions_on_attach>
-	                          <contact_topic>__default_topic__</contact_topic>
+	                          <contact_topic>grasp_plugin</contact_topic>
+<!---	                          <contact_topic>__default_topic__</contact_topic> -->
 	                        </plugin>
 			</gazebo>
 

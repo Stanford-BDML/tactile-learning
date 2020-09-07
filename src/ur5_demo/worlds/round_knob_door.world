@@ -18,6 +18,7 @@
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
+<!--
         <collision name='collision'>
           <geometry>
             <plane>
@@ -41,7 +42,8 @@
             <bounce/>
           </surface>
           <max_contacts>10</max_contacts>
-        </collision>
+        </collision> -->
+
         <visual name='visual'>
           <cast_shadows>0</cast_shadows>
           <geometry>
@@ -242,7 +244,7 @@
       <link name='door'>
 <!--    <pose frame=''>y -x -z</pose> -->
         <pose frame=''>0 0 0.508 3.14159 -0 1.57</pose>
-<!--        <pose frame=''>-0 0 2.04 3.14159 -0 1.57</pose> -->
+<!--        <pose frame=''>0 0 0.508 3.14159 -0 1.57</pose> -->
         <inertial>
           <mass>41.3256</mass>
           <pose frame=''>0.4569 0.0349 1.016 0 -0 0</pose>
@@ -698,7 +700,11 @@
           <dynamics>
             <damping>2</damping>
             <friction>3</friction>
-            <spring_reference>0.5</spring_reference>
+
+<!--            <spring_reference>0.5</spring_reference>
+            <spring_stiffness>5</spring_stiffness>  -->
+
+            <spring_reference>1</spring_reference>	<!--5 : handles 10000 -->
             <spring_stiffness>5</spring_stiffness>
           </dynamics>
           <use_parent_model_frame>1</use_parent_model_frame>
