@@ -8,6 +8,7 @@ import numpy as np
 import math
 import sys
 import time
+from matplotlib import pyplot as plt
 
 # ROS 
 import rospy
@@ -187,7 +188,8 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self.joints_state = JointState()
         self.end_effector = Point() 
         self.previous_action =[]
-#        self.counter = 0
+        self.counter = 0
+        self.max_rewards = 1
 
         # Arm/Control parameters
         self._ik_params = setups['UR5_6dof']['ik_params']
@@ -709,6 +711,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self._act(action)
 #	print("[action]", action)
 
+
         self.wrench_stamped
         self.force = self.wrench_stamped.wrench.force
         self.torque = self.wrench_stamped.wrench.torque
@@ -716,7 +719,8 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 #        print("[force]", self.force.x, self.force.y, self.force.z)
 #        print("[torque]", self.torque.x, self.torque.y, self.torque.z)
 
-        if self.force_limit - 10 < self.force.x or self.force.x < -self.force_limit - 10 :
+
+        if self.force_limit < self.force.x or self.force.x < -self.force_limit - 10 :
         	self._act(self.previous_action)
 #        	print("force.x over the limit")
 #        	print("[previous_action]", self.previous_action)
@@ -743,7 +747,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         else:
         	self.previous_action = copy.deepcopy(action)
 #        	print("[action]", action)
-        
+    
         # Then we send the command to the robot and let it go for running_step seconds
         time.sleep(self.running_step)
         self._gz_conn.pauseSim()
@@ -766,6 +770,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self.door_rpy = self.cvt_quat_to_euler(self.quat)
         self.quat = self.imu_link.orientation
         self.imu_link_rpy = self.cvt_quat_to_euler(self.quat)
+        compute_rewards = 0
 
 #        self.rpy = self.cvt_quat_to_euler(Quaternion(0.0, 0.0, 0.7071, 0.7071))
         #print ("[self.target_point]: ", [self.target_point.x, self.target_point.y, self.target_point.z])
@@ -777,24 +782,87 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 #        print ("[imu_link]: ", [self.imu_link.orientation.x, self.imu_link.orientation.y, self.imu_link.orientation.z, self.imu_link.orientation.w])
 #        print ("[door_rpy]: ", [self.door_rpy.x, self.door_rpy.y, self.door_rpy.z])			# [-3.141590232638843, 4.64637166410168e-06, 3.1407993185850303]
 													# => [-3.141587417428544, 6.811796590263218e-05, 2.8971100347923704]
-#        print ("[imu_link_rpy]: ", [self.imu_link_rpy.x, self.imu_link_rpy.y, self.imu_link_rpy.z])	# [-5.017238272290064e-06, 2.560885641286913e-07, 1.5707993173228965]
+#        print ("[self.imu_link_rpy]: ", [self.imu_link_rpy.x, self.imu_link_rpy.y, self.imu_link_rpy.z])	# [-5.017238272290064e-06, 2.560885641286913e-07, 1.5707993173228965]
 													# => [1.2205817198134408, -4.341035340318689e-06, 1.3270298472237638]
 #        print ("[type]: ", type(self.door_rpy), type(self.end_effector.position))
 #        print ("[rpy]: ", [self.rpy.x, self.rpy.y, self.rpy.z])
 
+        if self.force_limit < self.force.x:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - (self.force.x - self.force_limit )
+#        	print("+ force.x", compute_rewards)
+        elif self.force.x < -self.force_limit:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.force_limit - self.force.x )
+#        	print("- force.x", compute_rewards)
+        elif self.force_limit < self.force.y:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - (self.force.y - self.force_limit )
+#        	print("+ force.y", compute_rewards)
+        elif self.force.y < -self.force_limit :
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.force_limit - self.force.y )
+#        	print("- force.y", compute_rewards)
+        elif self.force_limit < self.force.z:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - (self.force.z - self.force_limit )
+#        	print("+ force.z", compute_rewards)
+        elif self.force.z < -self.force_limit:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.force_limit - self.force.z )
+#        	print("- force.z", compute_rewards)
+        elif self.torque_limit < self.torque.x:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( self.torque.x - self.torque_limit )
+#        	print("+ torque.x", compute_rewards)
+        elif self.torque.x < -self.torque_limit:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.torque_limit - self.torque.x )
+#        	print("- torque.x", compute_rewards)
+        elif self.torque_limit < self.torque.y:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( self.torque.y - self.torque_limit )
+#        	print("+ torque.y", compute_rewards)
+        elif self.torque.y < -self.torque_limit:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.torque_limit - self.torque.y )
+#        	print("- torque.y", compute_rewards)
+        elif self.torque_limit < self.torque.z:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( self.torque.z - self.torque_limit )
+#        	print("+ torque.z", compute_rewards)
+        elif self.torque.z < -self.torque_limit:
+        	compute_rewards = self.imu_link_rpy.x * 1000 - ( -self.torque_limit - self.torque.z )
+#        	print("- torque.z", compute_rewards)
+        else:
+        	compute_rewards = self.imu_link_rpy.x * 1000
+#        	print("not over limits", compute_rewards)
+
+#	self.counter = self.counter + 1
+
+#        if (self.counter%10) == 0:
+#                plt.figure(2)
+#        	x_data2 = []
+#        	y_data2 = []
+#        	x_data2.append(self.counter)
+#        	y_data2.append(compute_rewards)
+#                print("counter:", self.counter)
+
+#        	if self.max_rewards < compute_rewards:
+#                	self.max_rewards = compute_rewards
+
+#        	axes = plt.gca()
+#        	axes.set_xlim(0, self.counter/1000)
+#        	axes.set_ylim(0, self.max_rewards)
+#        	line2, = axes.plot(x_data2, y_data2, 'b-')
+#        	line2.set_xdata(x_data2)
+#        	line2.set_ydata(y_data2)
+#        	plt.draw()  
+#        	plt.pause(1e-17)
+#        	plt.savefig("./results/ppo_with_gae_reward.png")
+
 #        return self.imu_link_rpy.x + 1.5708061 - self.imu_link_rpy.z  # for door opening
-        return self.imu_link_rpy.x  # for door opening
+        return compute_rewards  # for door opening
 
 #        return 3.134 - self.door_rpy.z  # for door opening
 #	return self.end_effector.position.z # for standup
 
 # clos
 #('[door_rpy]: ', [-3.141589494723927, 5.371950050444065e-06, 3.140803800525111])
-#('[imu_link_rpy]: ', [-5.406752832019292e-06, 6.896590419417709e-06, 1.5708061011106662])
+#('[self.imu_link_rpy]: ', [-5.406752832019292e-06, 6.896590419417709e-06, 1.5708061011106662])
 
 # open
 #('[door_rpy]: ', [3.1374584007550737, -0.0018131747911100536, 2.764050391990123(delta=0.3768)])
-#('[imu_link_rpy]: ', [1.0934212049101757(delta=1.0934), -0.004085577221111396, 1.1941435185763472(delta=0.3768)])
+#('[self.imu_link_rpy]: ', [1.0934212049101757(delta=1.0934), -0.004085577221111396, 1.1941435185763472(delta=0.3768)])
 
     def check_done(self):
 #        if self.end_effector.position.z > 3: # for standup

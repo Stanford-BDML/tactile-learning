@@ -144,19 +144,14 @@ def main():
 
     episode_size = 1
     batch_size = 16
-#    update = 0
     nupdates = 10000
-    max_return = 100 
+    max_return = 100
+    min_return = -30
 
     # save fig
     x_data = []
     y_data = []
     axes = plt.gca()
-#    axes.set_xlim(0, update)
-#    axes.set_ylim(0, max_return)
-#    axes.set_xlim(0, 500)
-#    axes.set_ylim(0, 5000)
-#    line, = axes.plot(x_data, y_data, 'r-')
 
     for update in range(nupdates+1):
         trajectories = run_policy(env, episodes=episode_size)
@@ -180,25 +175,28 @@ def main():
 
         avg_pol_loss_list.append(pol_loss)
         avg_val_loss_list.append(val_loss)
-        
         avg_return_list.append([np.sum(t['rewards']) for t in trajectories])
+
         if (update%1) == 0:
             print('[{}/{}] return : {:.3f}, value loss : {:.3f}, policy loss : {:.3f}, policy kl : {:.5f}, policy entropy : {:.3f}'.format(
                 update, nupdates, np.mean(avg_return_list), np.mean(avg_val_loss_list), np.mean(avg_pol_loss_list), kl, entropy))
         if max_return < np.mean(avg_return_list):
                 max_return = np.mean(avg_return_list)
+#        if max_return < URSimDoorOpening.imu_link_rpy.x * 10:
+#                max_return = URSimDoorOpening.imu_link_rpy.x * 10
+        if min_return > np.mean(avg_return_list):
+                min_return = np.mean(avg_return_list)
 
-        print("[max_return]:", max_return)
-        print("[np.mean(avg_return_list)]:", np.mean(avg_return_list))
         x_data.append(update)
         y_data.append(np.mean(avg_return_list))
+#        y2_data.append(URSimDoorOpening.imu_link_rpy.x * 10)
 
-        if (update%1) == 0:
+        if (update%5) == 0:
             axes.set_xlim(0, update)
-            axes.set_ylim(0, max_return)
-            line, = axes.plot(x_data, y_data, 'r-')
-            line.set_xdata(x_data)
-            line.set_ydata(y_data)
+            axes.set_ylim(min_return, max_return)
+            line1, = axes.plot(x_data, y_data, 'r-')
+            line1.set_xdata(x_data)
+            line1.set_ydata(y_data)
             plt.draw()  
             plt.pause(1e-17)
             plt.savefig("./results/ppo_with_gae_avg_return_list.png")

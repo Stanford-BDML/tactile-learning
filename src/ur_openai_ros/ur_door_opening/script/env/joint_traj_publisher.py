@@ -105,7 +105,7 @@ class JointTrajPub(object):
 #    	    p.positions.append(1.18)
 #    	    p.positions.append(-1.57)
 ### original
-    	    print("joints_array[0]:", joints_array[0])
+#    	    print("joints_array[0]:", joints_array[0])
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])
     	    p.positions.append(joints_array[2])

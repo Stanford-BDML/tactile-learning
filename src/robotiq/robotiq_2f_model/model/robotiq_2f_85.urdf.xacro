@@ -187,7 +187,7 @@
 			<parent link="${name}_right_spring_link"/>
 			<child link="${name}_right_follower"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" />
+			<limit lower="${-170 * 3.141592 / 180}" upper="${170 * 3.141592 / 180}" effort="1000" velocity="${110 * 3.141592 / 180}" /> 
 
 <!--			<xacro:unless value="${adaptive_transmission}">
 			<mimic joint="${name}_right_driver_joint" multiplier="-1"/>

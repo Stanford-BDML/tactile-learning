@@ -19,8 +19,8 @@ max_height: 3.0   # in meters
 min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
 
-force_limit: 20 # 300 ~ over 1000 in position control
-torque_limit: 5 # 30 ~  in position control
+force_limit: 15 # 300 ~ over 1000 in position control
+torque_limit: 10 # 30 ~  in position control
 
 observations: # Observations you want to use for the learning
   - shp_joint_ang
