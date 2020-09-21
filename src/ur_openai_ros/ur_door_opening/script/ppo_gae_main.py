@@ -24,7 +24,8 @@ from algorithm.ppo_gae import PPOGAEAgent
 seed = 0
 obs_dim = 21 # env.observation_space.shape[0] # have to change number of hdim
 n_act = 6 #config: act_dim #env.action_space.n
-agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=obs_dim, policy_lr=3e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
+agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=64, policy_lr=1e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
+#agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=obs_dim, policy_lr=3e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
 
 '''
 PPO Agent with Gaussian policy
@@ -138,20 +139,33 @@ def main():
     tf.set_random_seed(seed)
     env.seed(seed=seed)
 
-    avg_return_list = deque(maxlen=10)
-    avg_pol_loss_list = deque(maxlen=10)
-    avg_val_loss_list = deque(maxlen=10)
+    avg_return_list = deque(maxlen=1) # 10
+    avg_pol_loss_list = deque(maxlen=1) # 10
+    avg_val_loss_list = deque(maxlen=1) # 10
+    entropy_list = deque(maxlen=1) # 10
 
     episode_size = 1
     batch_size = 16
     nupdates = 10000
-    max_return = 100
-    min_return = -30
+    max_return = 0
+    min_return = 0
+    max_val_loss = 0
+    min_val_loss = 0
+    max_pol_loss = 0
+    min_pol_loss = 0
+    max_entropy = 0
+    min_entropy = 0
 
     # save fig
     x_data = []
     y_data = []
-    axes = plt.gca()
+    x_data_v = []
+    y_data_v = []
+    x_data_p = []
+    y_data_p = []
+    x_data_e = []
+    y_data_e = []
+    fig = plt.figure(figsize=(20, 10))
 
     for update in range(nupdates+1):
         trajectories = run_policy(env, episodes=episode_size)
@@ -176,32 +190,61 @@ def main():
         avg_pol_loss_list.append(pol_loss)
         avg_val_loss_list.append(val_loss)
         avg_return_list.append([np.sum(t['rewards']) for t in trajectories])
+        entropy_list.append(entropy)
 
         if (update%1) == 0:
             print('[{}/{}] return : {:.3f}, value loss : {:.3f}, policy loss : {:.3f}, policy kl : {:.5f}, policy entropy : {:.3f}'.format(
                 update, nupdates, np.mean(avg_return_list), np.mean(avg_val_loss_list), np.mean(avg_pol_loss_list), kl, entropy))
         if max_return < np.mean(avg_return_list):
                 max_return = np.mean(avg_return_list)
-#        if max_return < URSimDoorOpening.imu_link_rpy.x * 10:
-#                max_return = URSimDoorOpening.imu_link_rpy.x * 10
         if min_return > np.mean(avg_return_list):
                 min_return = np.mean(avg_return_list)
+        if max_val_loss < np.mean(avg_val_loss_list):
+                max_val_loss = np.mean(avg_val_loss_list)
+        if min_val_loss > np.mean(avg_val_loss_list):
+                min_val_loss = np.mean(avg_val_loss_list)
+        if max_pol_loss < np.mean(avg_pol_loss_list):
+                max_pol_loss = np.mean(avg_pol_loss_list)
+        if min_pol_loss > np.mean(avg_pol_loss_list):
+                min_pol_loss = np.mean(avg_pol_loss_list)
+        if max_entropy < entropy:
+                max_entropy = entropy
+        if min_entropy > entropy:
+                min_entropy = entropy
 
         x_data.append(update)
         y_data.append(np.mean(avg_return_list))
-#        y2_data.append(URSimDoorOpening.imu_link_rpy.x * 10)
+        x_data_v.append(update)
+        y_data_v.append(np.mean(avg_val_loss_list))
+        x_data_p.append(update)
+        y_data_p.append(np.mean(avg_pol_loss_list))
+        x_data_e.append(update)
+        y_data_e.append(entropy)
 
-        if (update%5) == 0:
-            axes.set_xlim(0, update)
-            axes.set_ylim(min_return, max_return)
-            line1, = axes.plot(x_data, y_data, 'r-')
-            line1.set_xdata(x_data)
-            line1.set_ydata(y_data)
-            plt.draw()  
+        if (update%1) == 0:
+            ax1 = fig.add_subplot(2, 2, 1)
+            ax1.plot(x_data, y_data, 'r-')
+            ax1.set_xlabel("episodes")
+            ax1.set_ylabel("ave_return")
+            ax2 = fig.add_subplot(2, 2, 2)
+            ax2.plot(x_data_v, y_data_v, 'b-')
+            ax2.set_xlabel("episodes")
+            ax2.set_ylabel("ave_val_loss")
+            ax3 = fig.add_subplot(2, 2, 3)
+            ax3.plot(x_data_p, y_data_p, 'g-')
+            ax3.set_xlabel("episodes")
+            ax3.set_ylabel("ave_pol_loss")
+            ax4 = fig.add_subplot(2, 2, 4)
+            ax4.plot(x_data_e, y_data_e, 'p-')
+            ax4.set_xlabel("episodes")
+            ax4.set_ylabel("entropy")
+
+            fig.subplots_adjust(hspace=0.3, wspace=0.3)
+            plt.draw()
             plt.pause(1e-17)
-            plt.savefig("./results/ppo_with_gae_avg_return_list.png")
+            plt.savefig("./results/ppo_with_gae_list.png")
 
-        if (np.mean(avg_return_list) > 100000): # Threshold return to success 
+        if (np.mean(avg_return_list) > 3140): # Threshold return to success 
             print('[{}/{}] return : {:.3f}, value loss : {:.3f}, policy loss : {:.3f}'.format(update,nupdates, np.mean(avg_return_list), np.mean(avg_val_loss_list), np.mean(avg_pol_loss_list)))
             print('The problem is solved with {} episodes'.format(update*episode_size))
             break

@@ -1,5 +1,2 @@
-model_checkpoint_path: "ppo_with_gae_model-200"
+model_checkpoint_path: "ppo_with_gae_model-50"
 all_model_checkpoint_paths: "ppo_with_gae_model-50"
-all_model_checkpoint_paths: "ppo_with_gae_model-100"
-all_model_checkpoint_paths: "ppo_with_gae_model-150"
-all_model_checkpoint_paths: "ppo_with_gae_model-200"

@@ -104,19 +104,28 @@
 <!--     pose frame        y    -x -z> -->
         <pose frame=''>-0.01 0.036 0 0 0 0</pose>
         <collision name='collision_1'>
-          <pose frame=''>-0.006 -0.048 0.263525 0 -0 0</pose>
-<!--          <pose frame=''>-0.01132 -0.05329 0.263525 0 -0 0</pose>
-          <pose frame=''>-0.025145 -0.03429 1.0541 0 -0 0</pose> -->
+          <pose frame=''>0 -0.06858 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://hinged_door/meshes/frame.dae</uri>
+              <scale>0.45 0.45 0.25</scale>
+            </mesh>
+          </geometry>
+
+<!--          <pose frame=''>-0.006 -0.048 0.263525 0 -0 0</pose>
+          <pose frame=''>-0.01132 -0.05329 0.263525 0 -0 0</pose>
+          <pose frame=''>-0.025145 -0.03429 1.0541 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.009</radius>
               <length>0.1</length>
             </cylinder>
-<!--            <box>
+            <box>
               <size>0.022631 0.030861 0.52705</size>
               <size>0.05029 0.06858 2.1082</size>
-            </box> -->
-          </geometry>
+            </box>
+          </geometry> -->
+
           <max_contacts>10</max_contacts>
 <!--          <surface>
             <contact>
@@ -172,7 +181,8 @@
             </contact>
           </surface>
         </collision>
-<!--        <collision name='collision_2'>
+
+ <!--       <collision name='collision_2'>
           <pose frame=''>-0.01132 0.392479 0.263525 0 -0 0</pose>
           <geometry>
             <box>
@@ -192,8 +202,8 @@
               <ode/>
             </friction>
           </surface>
-        </collision> -->
-<!--        <collision name='collision_3'>
+        </collision>
+        <collision name='collision_3'>
           <pose frame=''>-0.025145 0.46482 2.07137 0 -0 0</pose>
           <scale>0.45 0.45 0.25</scale>
           <geometry>
@@ -216,6 +226,7 @@
             </friction>
           </surface>
         </collision> -->
+
         <visual name='visual'>
           <pose frame=''>0 -0.06858 0 0 -0 0</pose>
           <geometry>

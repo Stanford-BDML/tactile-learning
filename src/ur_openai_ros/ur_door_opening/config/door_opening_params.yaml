@@ -19,8 +19,8 @@ max_height: 3.0   # in meters
 min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
 
-force_limit: 15 # 300 ~ over 1000 in position control
-torque_limit: 10 # 30 ~  in position control
+force_limit: 35  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
+torque_limit: 15 # In position control:30 ~  (only rotate z1 ~ y-12)
 
 observations: # Observations you want to use for the learning
   - shp_joint_ang
@@ -69,7 +69,7 @@ init_joint_pose2:
   elb: 2.1438566966530352
   wr1: -0.4029605278499071
   wr2: 1.18284603228705
-  wr3: -1.5726680497015089
+  wr3: -1.5717792992464688
 
 eelink_pose_after_rotate:
   shp: 1.2168549330235976
