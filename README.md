@@ -16,7 +16,48 @@ ROS packages.
 3. UR5 rospy interface
 4. gazebo_ros_pkgs
 5. gazebo-pkgs
+ ```console
+ cd [project dir/src] 
+ git clone https://github.com/JenniferBuehler/gazebo-pkgs.git
+ catkin build
+ *delete "gazebo_state_plugins" and "gazebo_test_tools"
 6. openai_ros
+ ```console
+ cd [project dir/src] 
+ git clone https://bitbucket.org/theconstructcore/openai_ros.git
+ cd ..
+ catkin build
+ source ./devel/setup.bash
+ rosdep install openai_ros
+ pip install empty
+ catkin build
+ ```
+
+## Make virtual env:
+1. Make Virtual Env in python2
+```console 
+cd [project dir] 
+virtualenv venv 
+```
+
+2. Activate/Deactivate 
+```console 
+source venv/bin/activate 
+```
+```console 
+([newenvname])$ deactivate
+```
+
+## Activate the virtual env and install the packages by pip install:
+1. numpy==(1.16.6)
+2. matplotlib==(2.2.5)
+3. sklearn-utils==(0.0.15)
+4. tensorflow==1.14.0       *the version is important
+5. tensorflow-gpu==1.14.0   *the version is important
+6. pyyaml==(5.3.1)
+7. rospkg==(1.2.8)
+8. gym==(0.16.0)
+
 
 ## Compilation:
 1. First time compiling this ROS workspace do:
