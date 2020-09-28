@@ -770,7 +770,8 @@
                                         <position>0.0 0.0 0.0</position>
                                         <rotation>0.00 -0.00 0.00</rotation>
 				</plugin> -->
-   	                        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+
+    	                        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
                                   <arm>
                                         <arm_name>gripper_arm</arm_name>
                                         <palm_link>${parent}</palm_link>
@@ -779,14 +780,13 @@
                                   </arm>
 	                          <forces_angle_tolerance>100</forces_angle_tolerance>
 	                          <update_rate>0.01</update_rate>
-<!-- /pos_traj_controller/command = 100Hz, /gazebo/model_states & /gazebo/link_states = 1kHz, /joint_states = 50Hz -->
 	                          <grip_count_threshold>0.01</grip_count_threshold>
 	                          <max_grip_count>1</max_grip_count>
 	                          <release_tolerance>0.005</release_tolerance>
 	                          <disable_collisions_on_attach>true</disable_collisions_on_attach>
-	                          <contact_topic>grasp_plugin</contact_topic>
-<!---	                          <contact_topic>__default_topic__</contact_topic> -->
+	                          <contact_topic>__default_topic__</contact_topic>
 	                        </plugin>
+<!-- /pos_traj_controller/command = 100Hz, /gazebo/model_states & /gazebo/link_states = 1kHz, /joint_states = 50Hz -->
 			</gazebo>
 
 		</xacro:unless>

@@ -18,6 +18,7 @@ desired_pose:
 max_height: 3.0   # in meters
 min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
+door_frame_tolerances: 0.005
 
 force_limit: 35  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
 torque_limit: 15 # In position control:30 ~  (only rotate z1 ~ y-12)

@@ -26,7 +26,6 @@ class JointTrajPub(object):
         	self._ctrl_conn.load_controllers("vel_traj_controller")
         	self._joint_traj_pub = rospy.Publisher('/vel_traj_controller/command', JointTrajectory, queue_size=10)
 
-#       	self._ctrl_conn.load_controllers("grp_controller")
        	self._grp_pub = rospy.Publisher('/gripper_controller/command', JointTrajectory, queue_size=10)
 
     def set_init_pose(self, init_pose):
@@ -90,21 +89,6 @@ class JointTrajPub(object):
     	    	    
     	    dt = 0.1 	#default 0.01
     	    p = JointTrajectoryPoint()	
-### before_grasp seq56(0.01), 43(0.1), 375(1, 7.5s)
-#    	    p.positions.append(1.09)
-#    	    p.positions.append(-1.96)
-#    	    p.positions.append(2.28)
-#    	    p.positions.append(-0.33)
-#    	    p.positions.append(1.06)
-#    	    p.positions.append(-1.57)
-### grasp_position seq22(0.01, 0.64s), 372(1)
-#    	    p.positions.append(1.2168549330235976)
-#    	    p.positions.append(-1.7469892316131368)
-#    	    p.positions.append(2.1438566966530352)
-#    	    p.positions.append(-0.4029605278499071)
-#    	    p.positions.append(1.18284603228705)
-#    	    p.positions.append(-1.57)
-### original
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])
     	    p.positions.append(joints_array[2])
@@ -112,21 +96,10 @@ class JointTrajPub(object):
     	    p.positions.append(joints_array[4])
     	    p.positions.append(joints_array[5])
     	    jt.points.append(p)
-
     	    # set duration
     	    jt.points[0].time_from_start = rospy.Duration.from_sec(dt)
 
-#    	    current_controller_type =  rospy.get_param("/control_type")
-#    	    if (current_controller_type == "pos") or (current_controller_type == "traj_pos"):
-#    	    	rospy.loginfo("Test: positions")
-#    	    else:
-#    	    	rospy.loginfo("Test: velocities")
-        	
-#    	    rospy.loginfo("Test: velocities")
-
     	    self._joint_traj_pub.publish(jt)
-#	    print("[jt]:", jt, type(jt))	# type <class 'trajectory_msgs.msg._JointTrajectory.JointTrajectory'>
-#	    print("[joints_array]:", joints_array, type(joints_array))
 
     	except rospy.ROSInterruptException: pass
 

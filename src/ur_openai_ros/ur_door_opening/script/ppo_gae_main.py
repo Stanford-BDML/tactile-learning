@@ -24,7 +24,7 @@ from algorithm.ppo_gae import PPOGAEAgent
 seed = 0
 obs_dim = 21 # env.observation_space.shape[0] # have to change number of hdim
 n_act = 6 #config: act_dim #env.action_space.n
-agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=64, policy_lr=1e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
+agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=64, policy_lr=1e-4, value_lr=1e-4, max_std=1.0, clip_range=0.2, seed=seed)
 #agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=obs_dim, policy_lr=3e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
 
 '''
@@ -44,7 +44,7 @@ def run_episode(env, animate=False): # Run policy and collect (state, action, re
         
         action = agent.get_action(obs) # List
         actions.append(action)
-        obs, reward, done, info = env.step(action)
+        obs, reward, done, info = env.step(action, update)
         
         if not isinstance(reward, float):
             reward = np.asscalar(reward)
@@ -68,7 +68,7 @@ def run_policy(env, episodes): # collect trajectories
                       'infos': infos} 
         
         print ("######################run_policy######################")
-        print ("observes: ", observes.shape, type(observes)) 		#(n_step, 15), <type 'numpy.ndarray'>
+        print ("observes: ", observes.shape, type(observes)) 		#(n_step, 21), <type 'numpy.ndarray'>
         print ("actions: ", actions.shape, type(actions))  		#(n_step,  6), <type 'numpy.ndarray'>
         print ("rewards: ", rewards.shape, type(rewards))  		#(n_step,   ), <type 'numpy.ndarray'>
         print ("trajectory: ", len(trajectory), type(trajectory)) 	#(      ,  4), <type 'dict'>
@@ -178,7 +178,7 @@ def main():
         print ("----------------------------------------------------")
         print ("update: ", update)
         print ("updates: ", nupdates)
-        print ("observes: ", observes.shape, type(observes)) 		# ('observes: ',   (n_step, 15), <type 'numpy.ndarray'>)
+        print ("observes: ", observes.shape, type(observes)) 		# ('observes: ',   (n_step, 21), <type 'numpy.ndarray'>)
         print ("advantages: ", advantages.shape, type(advantages))	# ('advantages: ', (n_step,),    <type 'numpy.ndarray'>)
         print ("returns: ", returns.shape, type(returns)) 		# ('returns: ',    (n_step,),    <type 'numpy.ndarray'>)
         print ("actions: ", actions.shape, type(actions)) 		# ('actions: ',    (n_step, 6),  <type 'numpy.ndarray'>)
