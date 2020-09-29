@@ -701,7 +701,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
             compute_rewards = 2.4 + 1.5708061 - self.imu_link_rpy.z
 
         if abs(self.door_frame.position.x - 0.014) > self.tolerances or abs(self.door_frame.position.y - 0.59) > self.tolerances or abs(self.door_frame.position.z - 0.1) > self.tolerances:
-            compute_rewards = compute_rewards - 100 + update / 10
+            compute_rewards = compute_rewards - 1000 + update / 100
 
         return compute_rewards
 
