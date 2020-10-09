@@ -287,6 +287,66 @@
                 	    <mu2>100000</mu2>
                   	        <kp>100000000.0</kp>
                   	        <kd>1.0</kd> -->
+
+<!--			  <sensor:contact name="contact_sensor_right">
+			  <geom>base_link_geom</geom>
+			  <updateRate>1.0</updateRate>
+			  <controller:gazebo_ros_bumper name="gazebo_ros_bumper_controller" plugin="libgazebo_ros_bumper.so">
+			        <alwaysOn>true</alwaysOn>
+			        <updateRate>1.0</updateRate>
+			        <bumperTopicName>weight</bumperTopicName>
+			        <interface:bumper name="bumper_iface" />
+			      </controller:gazebo_ros_bumper>
+			  </sensor:contact> -->
+
+<!--			  <sensor type="contact" name="contact_sensor_right">
+			    <geom>${name}_right_pad</geom>
+			    <updateRate>1.0</updateRate>
+                            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
+                              <alwaysOn>true</alwaysOn>
+                              <updateRate>1.0</updateRate>
+                              <bumperTopicName>right_pad_bumper</bumperTopicName>
+                              <frameName>world</frameName>
+                            </plugin>
+			  </sensor> -->
+
+			    <sensor type="camera" name="camera1">
+			      <update_rate>30.0</update_rate>
+			      <camera name="head">
+                                <pose>0 0.003 0.0215 0 0 4.71</pose>
+<!--                                <pose>0 0.005 0.016 0 0 4.71</pose> -->
+			        <horizontal_fov>1.3962634</horizontal_fov>
+			        <image>
+			          <width>4</width>
+			          <height>7</height>
+			          <format>L8</format>
+			        </image>
+			        <clip>
+			          <near>0.001</near>  <!-- 0.02, min 0.003 -->
+			          <far>0.1</far>
+			        </clip>
+			        <noise>
+			          <type>gaussian</type>
+			          <mean>0.0</mean>
+			          <stddev>0.007</stddev>
+			        </noise>
+			      </camera>
+			      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+			        <alwaysOn>true</alwaysOn>
+			        <updateRate>0.0</updateRate>
+			        <cameraName>robotiq/rightcam</cameraName>
+			        <imageTopicName>image_raw_right</imageTopicName>
+			        <cameraInfoTopicName>camera_info_right</cameraInfoTopicName>
+			        <frameName>right_pad</frameName>
+			        <hackBaseline>0.07</hackBaseline>
+			        <distortionK1>0.0</distortionK1>
+			        <distortionK2>0.0</distortionK2>
+			        <distortionK3>0.0</distortionK3>
+			        <distortionT1>0.0</distortionT1>
+			        <distortionT2>0.0</distortionT2>
+			      </plugin>
+			    </sensor>
+
              		</gazebo>  
 		</xacro:if>
 
@@ -551,8 +611,59 @@
                   	        <mu2>100000</mu2>
                   	        <kp>100000000.0</kp>
                   	        <kd>1.0</kd> -->
+
+<!--			  <sensor:contact name="contact_sensor_left">
+			  <geom>base_link_geom</geom>
+			  <updateRate>1.0</updateRate>
+			  <controller:gazebo_ros_bumper name="gazebo_ros_bumper_controller" plugin="libgazebo_ros_bumper.so">
+			        <alwaysOn>true</alwaysOn>
+			        <updateRate>1.0</updateRate>
+			        <bumperTopicName>weight</bumperTopicName>
+			        <interface:bumper name="bumper_iface" />
+			      </controller:gazebo_ros_bumper>
+			  </sensor:contact> -->
+
+			    <sensor type="camera" name="camera2">
+			      <update_rate>30.0</update_rate>
+			      <camera name="head">
+                                <pose>0 0.003 0.0215 0 0 4.71</pose>
+<!-- lower than 0 is almost black -->
+<!--                                <pose>0 0.0005 0.017 0 0 4.71</pose> -->
+			        <horizontal_fov>1.3962634</horizontal_fov>
+			        <image>
+			          <width>4</width>
+			          <height>7</height>
+			          <format>L8</format>
+			        </image>
+			        <clip>
+			          <near>0.001</near>  <!-- 0.02, min 0.001 -->
+			          <far>0.1</far>
+			        </clip>
+			        <noise>
+			          <type>gaussian</type>
+			          <mean>0.0</mean>
+			          <stddev>0.007</stddev>
+			        </noise>
+			      </camera>
+			      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+			        <alwaysOn>true</alwaysOn>
+			        <updateRate>0.0</updateRate>
+			        <cameraName>robotiq/leftcam</cameraName>
+			        <imageTopicName>image_raw_left</imageTopicName>
+			        <cameraInfoTopicName>camera_info_left</cameraInfoTopicName>
+			        <frameName>left_pad</frameName>
+			        <hackBaseline>0.07</hackBaseline>
+			        <distortionK1>0.0</distortionK1>
+			        <distortionK2>0.0</distortionK2>
+			        <distortionK3>0.0</distortionK3>
+			        <distortionT1>0.0</distortionT1>
+			        <distortionT2>0.0</distortionT2>
+			      </plugin>
+			    </sensor>
+
              		</gazebo> 
 		</xacro:if>
+
 
 		<joint name="${name}_left_spring_link_joint" type="revolute">
 			<origin xyz="0 -0.012 0.0614" rpy="0 0 3.141592653589793"/>
@@ -679,98 +790,6 @@
 			</transmission>
 
 			<gazebo>
-	  	        <!--       <joint name='add_right_joint' type='revolute'>
-			                <child>${name}_right_follower</child>
-			                <parent>${name}_right_driver</parent>
-                                        <axis>
-			                   <xyz>0 0 1</xyz>
-			                   <limit>
-			                     <lower>-2.97</lower>
-			                     <upper>2.97</upper>
-                                             <effort>176</effort>
-                                             <velocity>1.91986</velocity>
-			                   </limit>
-			                   <dynamics>
-			                     <spring_reference>0</spring_reference>
-			                     <spring_stiffness>0</spring_stiffness>
-			                   </dynamics>
-			                   <use_parent_model_frame>1</use_parent_model_frame>
-		                        </axis>
-		                </joint>
-	  	                <joint name='add_left_joint' type='revolute'>
-			                <child>${name}_left_follower</child>
-			                <parent>${name}_left_driver</parent>
-		                        <axis>
-			                   <xyz>0 0 -1</xyz>
-			                   <limit>
-			                     <lower>-2.97</lower>
-			                     <upper>2.97</upper>
-                                             <effort>176</effort>
-                                             <velocity>1.91986</velocity>
-			                   </limit>
-			                   <dynamics>
-			                     <spring_reference>0</spring_reference>
-			                     <spring_stiffness>0</spring_stiffness>
-			                   </dynamics>
-			                   <use_parent_model_frame>1</use_parent_model_frame>
-		                        </axis>
-		                </joint> -->
-
-			<!--	<plugin name="add_right_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>add_right_joint</mimicJoint>
-					<multiplier>-1</multiplier>
-				</plugin>
-				<plugin name="add_left_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>add_left_joint</mimicJoint>
-					<multiplier>-1</multiplier>
-				</plugin>
-
-				<plugin name="${name}_right_follower_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>${name}_right_follower_joint</mimicJoint>
-					<multiplier>-1</multiplier>
-                                        <offset>0.0</offset>
-				</plugin>
-				<plugin name="${name}_right_spring_link_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>${name}_right_spring_link_joint</mimicJoint>
-					<multiplier>1</multiplier>
-				</plugin>
-				<plugin name="${name}_left_follower_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>${name}_left_follower_joint</mimicJoint>
-					<multiplier>-1</multiplier>
-                                        <offset>0.0</offset>
-				</plugin>
-				<plugin name="${name}_left_spring_link_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>${name}_left_spring_link_joint</mimicJoint>
-					<multiplier>1</multiplier>
-				</plugin>
-				<plugin name="${name}_left_driver_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
-					<joint>${name}_right_driver_joint</joint>
-					<mimicJoint>${name}_left_driver_joint</mimicJoint>
-					<multiplier>1</multiplier>
-				</plugin> -->
-
-                                 <!-- add for pegasus closed plugin
-				<plugin name="${name}_right_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
-					<joint>add_right_joint</joint>
-                                        <child>${name}_right_follower</child>
-					<parent>${name}_right_spring_link</parent>
-                                        <position>0.0 0.0 0.0</position>
-                                        <rotation>0.00 -0.00 0.00</rotation>
-				</plugin>
-				<plugin name="${name}_left_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
-					<joint>add_left_joint</joint>
-                                        <child>${name}_left_follower</child>
-					<parent>${name}_left_spring_link</parent>
-                                        <position>0.0 0.0 0.0</position>
-                                        <rotation>0.00 -0.00 0.00</rotation>
-				</plugin> -->
-
     	                        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
                                   <arm>
                                         <arm_name>gripper_arm</arm_name>
@@ -788,6 +807,7 @@
 	                        </plugin>
 <!-- /pos_traj_controller/command = 100Hz, /gazebo/model_states & /gazebo/link_states = 1kHz, /joint_states = 50Hz -->
 			</gazebo>
+
 
 		</xacro:unless>
 	</xacro:macro>

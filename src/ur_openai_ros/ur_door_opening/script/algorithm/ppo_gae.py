@@ -3,9 +3,23 @@ import numpy as np
 import tensorflow as tf
 #from tensorflow import keras
 from sklearn.utils import shuffle
+# ROS
+import rospy
+
+obs_dim = rospy.get_param("/ML/obs_dim")
+n_act = rospy.get_param("/ML/n_act")
+clip_range = rospy.get_param("/ML/clip_range")
+epochs = rospy.get_param("/ML/epochs")
+policy_lr = rospy.get_param("/ML/policy_lr")
+value_lr = rospy.get_param("/ML/value_lr")
+hdim = rospy.get_param("/ML/hdim")
+max_std = rospy.get_param("/ML/max_std")
+seed = rospy.get_param("/ML/seed")
+act_step = rospy.get_param("/ML/act_step")
+save_step = rospy.get_param("/ML/save_step")
 
 class PPOGAEAgent(object): 
-    def __init__(self, obs_dim, n_act, clip_range=0.2, epochs=10, policy_lr=1e-4, value_lr=1e-4, hdim=64, max_std=1.0, seed=0):
+    def __init__(self, obs_dim, n_act, clip_range, epochs, policy_lr, value_lr, hdim, max_std, seed):
 #    def __init__(self, obs_dim, n_act, clip_range=0.2, epochs=10, policy_lr=3e-3, value_lr=7e-4, hdim=64, max_std=1.0, seed=0):
         
         self.seed=seed
@@ -26,7 +40,7 @@ class PPOGAEAgent(object):
         self.counter = 0
 
         # load the parameters 
-        # self.saver.restore(self.sess, './results/ppo_with_gae_model-200')
+        # self.saver.restore(self.sess, './results/ppo_with_gae_model-1000')
 
     def _build_graph(self):
         self.g = tf.Graph()
@@ -155,7 +169,7 @@ class PPOGAEAgent(object):
     def get_action(self, obs): # SAMPLE FROM POLICY
         feed_dict = {self.obs_ph: obs}
         sampled_action = self.sess.run(self.sample_action,feed_dict=feed_dict)
-        return sampled_action[0] / 100 # 100(~20200904), 300(20200905~), 500(~20200909), 2000(20200909~), 4000(20200910~)
+        return sampled_action[0] / act_step # 100(~20200904), 300(20200905~), 500(~20200909), 2000(20200909~), 4000(20200910~)
 # /10:   [action]', array([-0.01992016,  0.10500866,  0.00853405,  0.02726892, -0.12092558, 0.02108609])
 # /500:   [action]', array([0.0010571,  -0.00022959,  -0.00092911,  -0.00055518, -0.0012934, -0.001190])  -> Maxdelta force(6.5, 1.8, 16.7), torque(0.65, 4.4, 0.17)
 # /1000: [action]', array([-1.9920163e-04,  1.0500867e-03,  8.5340682e-05,  2.7268915e-04, -1.2092555e-03,  2.1086067e-04])
@@ -199,28 +213,27 @@ class PPOGAEAgent(object):
         
         # save the parameters
 	self.counter = self.counter + 1
-        n = 1
 
-        if self.counter == 100 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=100 / n)
-        elif self.counter == 200 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=200 / n)
-        elif self.counter == 300 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=300 / n)
-        elif self.counter == 400 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=400 / n)
-        elif self.counter == 500 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=500 / n)
-        elif self.counter == 600 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=600 / n)
-        elif self.counter == 700 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=700 / n)
-        elif self.counter == 800 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=800 / n)
-        elif self.counter == 900 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=900 / n)
-        elif self.counter == 1000 / n:
-            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step=1000 / n)
+        if self.counter == 1 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 1 * save_step)
+        elif self.counter == 2 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 2 * save_step)
+        elif self.counter == 3 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 3 * save_step)
+        elif self.counter == 4 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 4 * save_step)
+        elif self.counter == 5 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 5 * save_step)
+        elif self.counter == 6 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 6 * save_step)
+        elif self.counter == 7 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 7 * save_step)
+        elif self.counter == 8 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 8 * save_step)
+        elif self.counter == 9 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 9 * save_step)
+        elif self.counter == 10 * save_step:
+            self.saver.save(self.sess, './results/ppo_with_gae_model', global_step= 10 * save_step)
 
         return policy_loss, value_loss, kl, entropy
     

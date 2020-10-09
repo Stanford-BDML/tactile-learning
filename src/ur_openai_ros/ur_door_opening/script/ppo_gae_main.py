@@ -1,5 +1,3 @@
-
-
 # Python
 import copy
 import numpy as np
@@ -21,10 +19,24 @@ from env.ur_door_opening_env import URSimDoorOpening
 # import our training algorithms
 from algorithm.ppo_gae import PPOGAEAgent
 
-seed = 0
-obs_dim = 21 # env.observation_space.shape[0] # have to change number of hdim
-n_act = 6 #config: act_dim #env.action_space.n
-agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=64, policy_lr=1e-4, value_lr=1e-4, max_std=1.0, clip_range=0.2, seed=seed)
+seed = rospy.get_param("/ML/seed")
+obs_dim = rospy.get_param("/ML/obs_dim")
+n_act = rospy.get_param("/ML/n_act")
+epochs = rospy.get_param("/ML/epochs")
+hdim = rospy.get_param("/ML/hdim")
+policy_lr = rospy.get_param("/ML/policy_lr")
+value_lr = rospy.get_param("/ML/value_lr")
+max_std = rospy.get_param("/ML/max_std")
+clip_range = rospy.get_param("/ML/clip_range")
+n_step = rospy.get_param("/ML/n_step")
+
+gamma = rospy.get_param("/ML/gamma")
+lam = rospy.get_param("/ML/lam")
+episode_size = rospy.get_param("/ML/episode_size")
+batch_size = rospy.get_param("/ML/batch_size")
+nupdates = rospy.get_param("/ML/nupdates")
+
+agent = PPOGAEAgent(obs_dim, n_act, epochs, hdim, policy_lr, value_lr, max_std, clip_range, seed)
 #agent = PPOGAEAgent(obs_dim, n_act, epochs=10, hdim=obs_dim, policy_lr=3e-3, value_lr=1e-3, max_std=1.0, clip_range=0.2, seed=seed)
 
 '''
@@ -35,7 +47,7 @@ def run_episode(env, animate=False): # Run policy and collect (state, action, re
     observes, actions, rewards, infos = [], [], [], []
     done = False
 
-    n_step = 1000 #1000
+#    n_step = 1000 #1000
     for update in range(n_step):
         obs = np.array(obs)
         obs = obs.astype(np.float32).reshape((1, -1)) # numpy.ndarray (1, num_obs)
@@ -83,7 +95,7 @@ def add_value(trajectories, val_func): # Add value estimation for each trajector
         values = val_func.get_value(observes)
         trajectory['values'] = values
 
-def add_gae(trajectories, gamma=0.99, lam=0.98): # generalized advantage estimation (for training stability)
+def add_gae(trajectories, gamma, lam): # generalized advantage estimation (for training stability)
     for trajectory in trajectories:
         rewards = trajectory['rewards']
         values = trajectory['values']
@@ -103,7 +115,7 @@ def add_gae(trajectories, gamma=0.99, lam=0.98): # generalized advantage estimat
             advantages[t] = advantage
         trajectory['advantages'] = advantages
 
-def add_rets(trajectories, gamma=0.99): # compute the returns
+def add_rets(trajectories, gamma): # compute the returns
     for trajectory in trajectories:
         rewards = trajectory['rewards']
         
@@ -134,7 +146,6 @@ def main():
     rospy.init_node('ur_gym', anonymous=True, log_level=rospy.DEBUG)
     
     env = gym.make('URSimDoorOpening-v0')
-    env._max_episode_steps = 10000
     np.random.seed(seed)
     tf.set_random_seed(seed)
     env.seed(seed=seed)
@@ -144,9 +155,6 @@ def main():
     avg_val_loss_list = deque(maxlen=1) # 10
     entropy_list = deque(maxlen=1) # 10
 
-    episode_size = 1
-    batch_size = 16
-    nupdates = 10000
     max_return = 0
     min_return = 0
     max_val_loss = 0
@@ -170,8 +178,8 @@ def main():
     for update in range(nupdates+1):
         trajectories = run_policy(env, episodes=episode_size)
         add_value(trajectories, agent)
-        add_gae(trajectories)
-        add_rets(trajectories)
+        add_gae(trajectories, gamma, lam)
+        add_rets(trajectories, gamma)
         observes, actions, advantages, returns = build_train_set(trajectories)
 
         
@@ -235,7 +243,7 @@ def main():
             ax3.set_xlabel("episodes")
             ax3.set_ylabel("ave_pol_loss")
             ax4 = fig.add_subplot(2, 2, 4)
-            ax4.plot(x_data_e, y_data_e, 'p-')
+            ax4.plot(x_data_e, y_data_e, 'c-')
             ax4.set_xlabel("episodes")
             ax4.set_ylabel("entropy")
 

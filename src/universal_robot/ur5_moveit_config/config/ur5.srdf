@@ -83,20 +83,20 @@
         <joint name="wrist_3_joint" value="3.0" />
     </group_state>
     <group_state name="before_grasp" group="manipulator">
-        <joint name="elbow_joint" value="2.284918129311265" />
-        <joint name="shoulder_lift_joint" value="-1.9619247342409523" />
-        <joint name="shoulder_pan_joint" value="1.0936292324911197" />
-        <joint name="wrist_1_joint" value="-0.3295925202225334" />
-        <joint name="wrist_2_joint" value="1.0594761648023008" />
-        <joint name="wrist_3_joint" value="-1.5717792992464688" />
+        <joint name="elbow_joint" value="2.6771635884219136" />
+        <joint name="shoulder_lift_joint" value="-1.6883855417730604" />
+        <joint name="shoulder_pan_joint" value="1.4410264033536153" />
+        <joint name="wrist_1_joint" value="2.1674968289716623" />
+        <joint name="wrist_2_joint" value="-1.4199836765311638" />
+        <joint name="wrist_3_joint" value="1.5702616267031195" />
     </group_state>
     <group_state name="grasp_position" group="manipulator">
-        <joint name="elbow_joint" value="2.1438566966530352" />
-        <joint name="shoulder_lift_joint" value="-1.7469892316131368" />
-        <joint name="shoulder_pan_joint" value="1.2168549330235976" />
-        <joint name="wrist_1_joint" value="-0.4029605278499071" />
-        <joint name="wrist_2_joint" value="1.18284603228705" />
-        <joint name="wrist_3_joint" value="-1.5726680497015089" />
+        <joint name="elbow_joint" value="2.4377209990850974" />
+        <joint name="shoulder_lift_joint" value="-1.4496597816566892" />
+        <joint name="shoulder_pan_joint" value="1.488122534496775" />
+        <joint name="wrist_1_joint" value="2.168370898415174" />
+        <joint name="wrist_2_joint" value="-1.4670589583209175" />
+        <joint name="wrist_3_joint" value="1.5709174034899702" />
     </group_state>
     <group_state name="grasp_rotate" group="manipulator">
         <joint name="elbow_joint" value="2.1438566966530352" />
@@ -148,13 +148,21 @@
         <joint name="simple_gripper_right_spring_link_joint" value="0.5" />
         <joint name="simple_gripper_left_spring_link_joint" value="0.5" />
     </group_state>
-    <group_state name="close0.4" group="gripper">
-        <joint name="simple_gripper_right_driver_joint" value="0.4" />
-        <joint name="simple_gripper_left_driver_joint" value="0.4" />
-        <joint name="simple_gripper_right_follower_joint" value="-0.4" />
-        <joint name="simple_gripper_left_follower_joint" value="-0.4" />
-        <joint name="simple_gripper_right_spring_link_joint" value="0.4" />
-        <joint name="simple_gripper_left_spring_link_joint" value="0.4" />
+    <group_state name="close0.31" group="gripper">
+        <joint name="simple_gripper_right_driver_joint" value="0.31" />
+        <joint name="simple_gripper_left_driver_joint" value="0.31" />
+        <joint name="simple_gripper_right_follower_joint" value="-0.31" />
+        <joint name="simple_gripper_left_follower_joint" value="-0.31" />
+        <joint name="simple_gripper_right_spring_link_joint" value="0.31" />
+        <joint name="simple_gripper_left_spring_link_joint" value="0.31" />
+    </group_state>
+    <group_state name="close0.305" group="gripper">
+        <joint name="simple_gripper_right_driver_joint" value="0.305" />
+        <joint name="simple_gripper_left_driver_joint" value="0.305" />
+        <joint name="simple_gripper_right_follower_joint" value="-0.305" />
+        <joint name="simple_gripper_left_follower_joint" value="-0.305" />
+        <joint name="simple_gripper_right_spring_link_joint" value="0.305" />
+        <joint name="simple_gripper_left_spring_link_joint" value="0.305" />
     </group_state>
     <group_state name="close0.3" group="gripper">
         <joint name="simple_gripper_right_driver_joint" value="0.3" />
@@ -163,14 +171,6 @@
         <joint name="simple_gripper_left_follower_joint" value="-0.3" />
         <joint name="simple_gripper_right_spring_link_joint" value="0.3" />
         <joint name="simple_gripper_left_spring_link_joint" value="0.3" />
-    </group_state>
-    <group_state name="close0.21" group="gripper">
-        <joint name="simple_gripper_right_driver_joint" value="0.21" />
-        <joint name="simple_gripper_left_driver_joint" value="0.21" />
-        <joint name="simple_gripper_right_follower_joint" value="-0.21" />
-        <joint name="simple_gripper_left_follower_joint" value="-0.21" />
-        <joint name="simple_gripper_right_spring_link_joint" value="0.21" />
-        <joint name="simple_gripper_left_spring_link_joint" value="0.21" />
     </group_state>
     <group_state name="close0.205" group="gripper">
         <joint name="simple_gripper_right_driver_joint" value="0.205" />
