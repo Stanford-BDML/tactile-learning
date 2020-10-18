@@ -9,33 +9,27 @@ ML:
   value_lr: 1e-5
   max_std: 1.0
   clip_range: 0.2
-  n_step: 1000 # 1000
+  n_step: 256 # 1024
 
-  gamma: 0.99
+  gamma: 0.95
   lam: 0.98
   episode_size: 1
   batch_size: 16
   nupdates: 10000
 
-  act_step: 100
-  save_step: 100
+  act_step: 100 #100
+  save_step: 500
 
 # Input type
 control_type: traj_pos #traj_vel or vel or pos or traj_pos
 
 # Environment Parameters
-desired_pose:
-    x: 0.0
-    y: 0.0
-    z: 1.0
-
-max_height: 3.0   # in meters
-min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
-door_frame_tolerances: 0.005 # 0.005
+door_frame_tolerances: 0.01 # 0.005
+max_update_rate: 3000 # 1000 = x1 speed
 
-force_limit: 35.000000  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
-torque_limit: 15.000000 # In position control:30 ~  (only rotate z1 ~ y-12)
+force_limit: 300.000000  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
+torque_limit: 30.000000 # In position control:30 ~  (only rotate z1 ~ y-12)
 
 obs_params:
   joint_n: 100
@@ -71,12 +65,12 @@ observations: # Observations you want to use for the learning
 joint_names: ['shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
 
 init_joint_pose0:
-  shp: 0.42113088235807705
-  shl: -2.499894322410209
-  elb: 2.465940488809082
-  wr1: 0.019181638229937903
-  wr2: 0.3869327391356494
-  wr3: -1.561166435896597
+  shp: 0
+  shl: -1.5707
+  elb: 0
+  wr1: -1.5707
+  wr2: 0
+  wr3: 0
 
 init_joint_pose1:
   shp: 1.4410264033536153

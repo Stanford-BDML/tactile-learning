@@ -8,6 +8,7 @@ from std_srvs.srv import SetBool, SetBoolResponse, SetBoolRequest
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Vector3
 
+p_max_update_rate = rospy.get_param("/max_update_rate")
 
 # Solve conda virtual env(gazebo call error) 
 class GazeboExecution():
@@ -30,9 +31,9 @@ class GazeboExecution():
 
         # Setup the Gravity Controle system
         service_name = '/gazebo/set_physics_properties'
-        rospy.logdebug("Waiting for service " + str(service_name))
+#        rospy.logdebug("Waiting for service " + str(service_name))
         rospy.wait_for_service(service_name)
-        rospy.logdebug("Service Found " + str(service_name))
+#        rospy.logdebug("Service Found " + str(service_name))
 
         self.set_physics = rospy.ServiceProxy(service_name, SetPhysicsProperties)
         self.init_values()
@@ -63,7 +64,6 @@ class GazeboExecution():
     def _reset_world(self, req):
         self.resetWorld()
         return SetBoolResponse(True, "_reset_world")
-
 
     def _unpause_physics(self, req):
         self.unpauseSim()
@@ -110,7 +110,7 @@ class GazeboExecution():
             print ("/gazebo/reset_simulation service call failed")
 
         self._time_step = Float64(0.001)
-        self._max_update_rate = Float64(1000.0)
+        self._max_update_rate = Float64(p_max_update_rate)
 
         self._gravity = Vector3()
         self._gravity.x = 0.0
@@ -140,10 +140,10 @@ class GazeboExecution():
         set_physics_request.gravity = self._gravity
         set_physics_request.ode_config = self._ode_config
 
-        rospy.logdebug(str(set_physics_request.gravity))
+#        rospy.logdebug(str(set_physics_request.gravity))
 
         result = self.set_physics(set_physics_request)
-        rospy.logdebug("Gravity Update Result==" + str(result.success) + ",message==" + str(result.status_message))
+#        rospy.logdebug("Gravity Update Result==" + str(result.success) + ",message==" + str(result.status_message))
         
         self.unpauseSim()
 

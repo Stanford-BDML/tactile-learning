@@ -15,7 +15,6 @@ class GazeboConnection():
         self._adjust_gravity = rospy.ServiceProxy('/adjust_gravity', SetBool)
         self._change_gravity_zero = rospy.ServiceProxy('/change_gravity_zero', SetBool)
 
-
         self._unpause = rospy.ServiceProxy('/unpause_physics', SetBool)
         self._pause = rospy.ServiceProxy('/pause_physics', SetBool)
         self._reset_simulation_proxy = rospy.ServiceProxy('/reset_simulation', SetBool)

@@ -19,6 +19,16 @@ from env.ur_door_opening_env import URSimDoorOpening
 # import our training algorithms
 from algorithm.ppo_gae import PPOGAEAgent
 
+import os
+import logging
+import warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=Warning)
+tf.get_logger().setLevel('INFO')
+tf.autograph.set_verbosity(0)
+tf.get_logger().setLevel(logging.ERROR)
+
 seed = rospy.get_param("/ML/seed")
 obs_dim = rospy.get_param("/ML/obs_dim")
 n_act = rospy.get_param("/ML/n_act")
@@ -47,11 +57,9 @@ def run_episode(env, animate=False): # Run policy and collect (state, action, re
     observes, actions, rewards, infos = [], [], [], []
     done = False
 
-#    n_step = 1000 #1000
     for update in range(n_step):
         obs = np.array(obs)
         obs = obs.astype(np.float32).reshape((1, -1)) # numpy.ndarray (1, num_obs)
-        #print ("observes: ", obs.shape, type(obs)) # (1, 15)
         observes.append(obs)
         
         action = agent.get_action(obs) # List
@@ -79,12 +87,12 @@ def run_policy(env, episodes): # collect trajectories
                       'rewards': rewards,
                       'infos': infos} 
         
-        print ("######################run_policy######################")
-        print ("observes: ", observes.shape, type(observes)) 		#(n_step, 21), <type 'numpy.ndarray'>
-        print ("actions: ", actions.shape, type(actions))  		#(n_step,  6), <type 'numpy.ndarray'>
-        print ("rewards: ", rewards.shape, type(rewards))  		#(n_step,   ), <type 'numpy.ndarray'>
-        print ("trajectory: ", len(trajectory), type(trajectory)) 	#(      ,  4), <type 'dict'>
-        print ("#####################run_policy#######################")
+#        print ("######################run_policy######################")
+#        print ("observes: ", observes.shape, type(observes)) 		#(n_step, 21), <type 'numpy.ndarray'>
+#        print ("actions: ", actions.shape, type(actions))  		#(n_step,  6), <type 'numpy.ndarray'>
+#        print ("rewards: ", rewards.shape, type(rewards))  		#(n_step,   ), <type 'numpy.ndarray'>
+#        print ("trajectory: ", len(trajectory), type(trajectory)) 	#(      ,  4), <type 'dict'>
+#        print ("#####################run_policy#######################")
         
         trajectories.append(trajectory)
     return trajectories
@@ -102,10 +110,10 @@ def add_gae(trajectories, gamma, lam): # generalized advantage estimation (for t
         
         # temporal differences
         
-        print ("###############################add_gae###########################")
-        print ("rewards: ", rewards.shape, type(rewards))  	# (n_step, ), <type 'numpy.ndarray'>
-        print ("values): ", values.shape, type(values))  	# (n_step, ), <type 'numpy.ndarray'>
-        print ("###############################add_gae###########################")
+#        print ("###############################add_gae###########################")
+#        print ("rewards: ", rewards.shape, type(rewards))  	# (n_step, ), <type 'numpy.ndarray'>
+#        print ("values): ", values.shape, type(values))  	# (n_step, ), <type 'numpy.ndarray'>
+#        print ("###############################add_gae###########################")
         
         tds = rewards + np.append(values[1:], 0) * gamma - values
         advantages = np.zeros_like(tds)
@@ -174,6 +182,8 @@ def main():
     x_data_e = []
     y_data_e = []
     fig = plt.figure(figsize=(20, 10))
+    
+    env.first_reset()
 
     for update in range(nupdates+1):
         trajectories = run_policy(env, episodes=episode_size)
@@ -181,17 +191,15 @@ def main():
         add_gae(trajectories, gamma, lam)
         add_rets(trajectories, gamma)
         observes, actions, advantages, returns = build_train_set(trajectories)
-
         
-        print ("----------------------------------------------------")
-        print ("update: ", update)
-        print ("updates: ", nupdates)
-        print ("observes: ", observes.shape, type(observes)) 		# ('observes: ',   (n_step, 21), <type 'numpy.ndarray'>)
-        print ("advantages: ", advantages.shape, type(advantages))	# ('advantages: ', (n_step,),    <type 'numpy.ndarray'>)
-        print ("returns: ", returns.shape, type(returns)) 		# ('returns: ',    (n_step,),    <type 'numpy.ndarray'>)
-        print ("actions: ", actions.shape, type(actions)) 		# ('actions: ',    (n_step, 6),  <type 'numpy.ndarray'>)
-        print ("----------------------------------------------------")
-        
+#        print ("----------------------------------------------------")
+#        print ("update: ", update)
+#        print ("updates: ", nupdates)
+#        print ("observes: ", observes.shape, type(observes)) 		# ('observes: ',   (n_step, 21), <type 'numpy.ndarray'>)
+#        print ("advantages: ", advantages.shape, type(advantages))	# ('advantages: ', (n_step,),    <type 'numpy.ndarray'>)
+#        print ("returns: ", returns.shape, type(returns)) 		# ('returns: ',    (n_step,),    <type 'numpy.ndarray'>)
+#        print ("actions: ", actions.shape, type(actions)) 		# ('actions: ',    (n_step, 6),  <type 'numpy.ndarray'>)
+#        print ("----------------------------------------------------")
 
         pol_loss, val_loss, kl, entropy = agent.update(observes, actions, advantages, returns, batch_size=batch_size)
 
@@ -201,8 +209,8 @@ def main():
         entropy_list.append(entropy)
 
         if (update%1) == 0:
-            print('[{}/{}] return : {:.3f}, value loss : {:.3f}, policy loss : {:.3f}, policy kl : {:.5f}, policy entropy : {:.3f}'.format(
-                update, nupdates, np.mean(avg_return_list), np.mean(avg_val_loss_list), np.mean(avg_pol_loss_list), kl, entropy))
+            print('[{}/{}] n_step : {},return : {:.3f}, value loss : {:.3f}, policy loss : {:.3f}, policy kl : {:.5f}, policy entropy : {:.3f}'.format(
+                update, nupdates, observes.shape, np.mean(avg_return_list), np.mean(avg_val_loss_list), np.mean(avg_pol_loss_list), kl, entropy))
         if max_return < np.mean(avg_return_list):
                 max_return = np.mean(avg_return_list)
         if min_return > np.mean(avg_return_list):
@@ -229,7 +237,8 @@ def main():
         x_data_e.append(update)
         y_data_e.append(entropy)
 
-        if (update%1) == 0:
+
+        if (update%10) == 0:
             ax1 = fig.add_subplot(2, 2, 1)
             ax1.plot(x_data, y_data, 'r-')
             ax1.set_xlabel("episodes")

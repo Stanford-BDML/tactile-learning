@@ -47,6 +47,9 @@ from env import robot_gazebo_env_goal
 from env.ur_setups import setups
 from env import ur_utils
 
+obs_dim = rospy.get_param("/ML/obs_dim")
+n_act = rospy.get_param("/ML/n_act")
+
 rospy.loginfo("register...")
 #register the training environment in the gym as an available one
 reg = gym.envs.register(
@@ -57,7 +60,7 @@ reg = gym.envs.register(
 
 class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
     def __init__(self):
-        rospy.logdebug("Starting URSimDoorOpening Class object...")
+#        rospy.logdebug("Starting URSimDoorOpening Class object...")
 
         # Init GAZEBO Objects
         self.set_obj_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
@@ -71,10 +74,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         rospy.Subscriber("/robotiq/leftcam/image_raw_left", Image, self.l_image_callback)
 
         # Gets training parameters from param server
-        self.desired_pose = Pose()
         self.running_step = rospy.get_param("/running_step")
-        self.max_height = rospy.get_param("/max_height")
-        self.min_height = rospy.get_param("/min_height")
         self.observations = rospy.get_param("/observations")
         
         # Joint limitation
@@ -142,8 +142,21 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         r_spr_value2 = rospy.get_param("/init_grp_pose2/r_spring")
         l_spr_value2 = rospy.get_param("/init_grp_pose2/l_spring")
 
+        init_pos0 = self.init_joints_pose(self.init_joint_pose0)
+        self.arr_init_pos0 = np.array(init_pos0, dtype='float32')
+        init_pos1 = self.init_joints_pose(self.init_joint_pose1)
+        self.arr_init_pos1 = np.array(init_pos1, dtype='float32')
+        init_pos2 = self.init_joints_pose(self.init_joint_pose2)
+        self.arr_init_pos2 = np.array(init_pos2, dtype='float32')
+
         self.init_grp_pose1 = [r_drv_value1, l_drv_value1, r_flw_value1, l_flw_value1, r_spr_value1, l_spr_value1]
         self.init_grp_pose2 = [r_drv_value2, l_drv_value2, r_flw_value2, l_flw_value2, r_spr_value2, l_spr_value2]
+
+        init_g_pos1 = self.init_joints_pose(self.init_grp_pose1)
+        self.arr_init_g_pos1 = np.array(init_g_pos1, dtype='float32')
+        init_g_pos2 = self.init_joints_pose(self.init_grp_pose2)
+        self.arr_init_g_pos2 = np.array(init_g_pos2, dtype='float32')
+
 
         # Fill in the Done Episode Criteria list
         self.episode_done_criteria = rospy.get_param("/episode_done_criteria")
@@ -186,7 +199,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self.left_image = Image()
         self.lift_image_ini = []
         self.end_effector = Point()
-        self.previous_action =[]
+        self.previous_action = copy.deepcopy(self.arr_init_pos2)
         self.counter = 0
         self.max_rewards = 1
 
@@ -198,8 +211,8 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self._joint_traj_pubisher = JointTrajPub()
 
         # Gym interface and action
-        self.action_space = spaces.Discrete(6)
-        self.observation_space = 71 #np.arange(self.get_observations().shape[0])
+        self.action_space = spaces.Discrete(n_act)
+        self.observation_space = obs_dim #np.arange(self.get_observations().shape[0])
         self.reward_range = (-np.inf, np.inf)
         self._seed()
 
@@ -492,7 +505,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
                     observation.append((ord(self.left_image.data[x]) - ord(self.left_image_ini.data[x])) * self.image_n)
             else:
                 raise NameError('Observation Asked does not exist=='+str(obs_name))
-        print("observation", list(map(round, observation, [3]*len(observation))))
+#        print("observation", list(map(round, observation, [3]*len(observation))))
 
         return observation
 
@@ -525,53 +538,49 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 
         rospy.logdebug("DONE Clamping current_joint_pose>>>" + str(self.current_joint_pose))
 
+
+    def first_reset(self):
+        jointtrajpub = JointTrajPub()
+        for update in range(100):
+        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos0)
+        for update in range(100):
+        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos1)
+
     # Resets the state of the environment and returns an initial observation.
     def reset(self):
 
 	# Go to initial position
 	self._gz_conn.unpauseSim()
-        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose0))
-        init_pos1 = self.init_joints_pose(self.init_joint_pose1)
-        self.arr_init_pos1 = np.array(init_pos1, dtype='float32')
-        init_pos2 = self.init_joints_pose(self.init_joint_pose2)
-        self.arr_init_pos2 = np.array(init_pos2, dtype='float32')
-
-        init_g_pos1 = self.init_joints_pose(self.init_grp_pose1)
-        arr_init_g_pos1 = np.array(init_g_pos1, dtype='float32')
-        init_g_pos2 = self.init_joints_pose(self.init_grp_pose2)
-        arr_init_g_pos2 = np.array(init_g_pos2, dtype='float32')
-
+#        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose0))
         jointtrajpub = JointTrajPub()
-        for update in range(500):
-        	jointtrajpub.GrpCommand(arr_init_g_pos1)
-        time.sleep(2)
-        for update in range(1000):
+        for update in range(50):
+        	jointtrajpub.GrpCommand(self.arr_init_g_pos1)
+        time.sleep(0.5)
+        for update in range(100):
         	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos2)
-        time.sleep(0.3)
-        for update in range(1000):
+        for update in range(100):
         	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos1)
-        time.sleep(0.3)
 
         # 0st: We pause the Simulator
-        rospy.logdebug("Pausing SIM...")
+#        rospy.logdebug("Pausing SIM...")
         self._gz_conn.pauseSim()
 
         # 1st: resets the simulation to initial values
-        rospy.logdebug("Reset SIM...")
+#        rospy.logdebug("Reset SIM...")
         self._gz_conn.resetSim()
 
         # 2nd: We Set the gravity to 0.0 so that we dont fall when reseting joints
         # It also UNPAUSES the simulation
-        rospy.logdebug("Remove Gravity...")
+#        rospy.logdebug("Remove Gravity...")
         self._gz_conn.change_gravity_zero()
 
         # EXTRA: Reset JoinStateControlers because sim reset doesnt reset TFs, generating time problems
-        rospy.logdebug("reset_ur_joint_controllers...")
+#        rospy.logdebug("reset_ur_joint_controllers...")
         self._ctrl_conn.reset_ur_joint_controllers(self._ctrl_type)
 
         # 3rd: resets the robot to initial conditions
-        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose1))
-        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose2))
+#        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose1))
+#        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose2))
 
         self.force = self.wrench_stamped.wrench.force
         self.torque = self.wrench_stamped.wrench.torque
@@ -600,29 +609,29 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         # 5th: Check all subscribers work.
         # Get the state of the Robot defined by its RPY orientation, distance from
         # desired point, contact force and JointState of the three joints
-        rospy.logdebug("check_all_systems_ready...")
+#        rospy.logdebug("check_all_systems_ready...")
         self.check_all_systems_ready()
 
         # 6th: We restore the gravity to original
-        rospy.logdebug("Restore Gravity...")
+#        rospy.logdebug("Restore Gravity...")
         self._gz_conn.adjust_gravity()
 
-        for update in range(1000):
+        for update in range(100):
         	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos2)
-        time.sleep(0.3)
+        time.sleep(0.1)
         for update in range(50):
-        	jointtrajpub.GrpCommand(arr_init_g_pos2)
-        time.sleep(2)
+        	jointtrajpub.GrpCommand(self.arr_init_g_pos2)
+        time.sleep(0.5)
 
         # 7th: pauses simulation
-        rospy.logdebug("Pause SIM...")
+#        rospy.logdebug("Pause SIM...")
         self._gz_conn.pauseSim()
 
         self.right_image_ini = copy.deepcopy(self.right_image)
         self.left_image_ini = copy.deepcopy(self.left_image)
 
         # 8th: Get the State Discrete Stringuified version of the observations
-        rospy.logdebug("get_observations...")
+#        rospy.logdebug("get_observations...")
        	observation = self.get_observations()
 #        print("[observations]", observation)
 
@@ -658,7 +667,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         '''
         ('action: ', array([ 0.,  0. , -0., -0., -0. , 0. ], dtype=float32))        
         '''
-        rospy.logdebug("UR step func")	# define the logger
+#        rospy.logdebug("UR step func")	# define the logger
         self.training_ok()
 
         # Given the action selected by the learning algorithm,
@@ -675,25 +684,25 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 
         if self.force_limit < self.force.x or self.force.x < -self.force_limit:
         	self._act(self.previous_action)
-        	print("force.x over the limit")
+#        	print("force.x over the limit")
         elif self.force_limit < self.force.y or self.force.y < -self.force_limit:
         	self._act(self.previous_action)
-        	print("force.y over the limit")
+#        	print("force.y over the limit")
         elif self.force_limit < self.force.z or self.force.z < -self.force_limit:
         	self._act(self.previous_action)
-        	print("force.z over the limit")
+#        	print("force.z over the limit")
         elif self.torque_limit < self.torque.x or self.torque.x < -self.torque_limit:
         	self._act(self.previous_action)
-        	print("torque.x over the limit")
+#        	print("torque.x over the limit")
         elif self.torque_limit < self.torque.y or self.torque.y < -self.torque_limit:
         	self._act(self.previous_action)
-        	print("torque.y over the limit")
+#        	print("torque.y over the limit")
         elif self.torque_limit < self.torque.z or self.torque.z < -self.torque_limit:
         	self._act(self.previous_action)
-        	print("torque.z over the limit")
+#        	print("torque.z over the limit")
         else:
         	self.previous_action = copy.deepcopy(action)
-        	print("True")
+#        	print("True")
 
         # Then we send the command to the robot and let it go for running_step seconds
         time.sleep(self.running_step)

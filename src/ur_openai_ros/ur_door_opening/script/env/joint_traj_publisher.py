@@ -54,28 +54,13 @@ class JointTrajPub(object):
 
     	rospy.logdebug("All Joint Publishers READY")
 
-    def move_joints(self, joints_array):
-    	vel_cmd = JointTrajectory()
-    	vel_cmd.joint_names = [ "shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint" ]
-    	vel_cmd.header.stamp = rospy.Time.now()
-    	# create a JTP instance and configure it
-    	jtp = JointTrajectoryPoint(positions=[0]*6, velocities=[0]*6 , time_from_start=rospy.Duration(.0))
-#    	jtp.velocities = [joints_array[0], joints_array[1], joints_array[2], joints_array[3], joints_array[4], joints_array[5] ]
-    	jtp.positions = [joints_array[0], joints_array[1], joints_array[2], joints_array[3], joints_array[4], joints_array[5] ]
-#	print("jtp", jtp)
-    	
-    	# setup the reset of the pt
-    	vel_cmd.points =[jtp]
-    	self._joint_traj_pub.publish(vel_cmd)
-#    	print("vel_cmd", vel_cmd)
-
     def jointTrajectoryCommand(self, joints_array): # dtype=float32), <type 'numpy.ndarray'>
 #    	rospy.loginfo("jointTrajectoryCommand")
     	try:    
-    	    rospy.loginfo (rospy.get_rostime().to_sec())
+#    	    rospy.loginfo (rospy.get_rostime().to_sec())
     	    while rospy.get_rostime().to_sec() == 0.0:
     	    	time.sleep(0.1)
-    	    	rospy.loginfo (rospy.get_rostime().to_sec())
+#    	    	rospy.loginfo (rospy.get_rostime().to_sec())
 
     	    jt = JointTrajectory()
     	    jt.header.stamp = rospy.Time.now()
@@ -87,7 +72,7 @@ class JointTrajPub(object):
     	    jt.joint_names.append("wrist_2_joint")
     	    jt.joint_names.append("wrist_3_joint")
     	    	    
-    	    dt = 0.1 	#default 0.01
+    	    dt = 0.01 	#default 0.01
     	    p = JointTrajectoryPoint()	
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])
@@ -106,10 +91,10 @@ class JointTrajPub(object):
     def GrpCommand(self, joints_array): # dtype=float32), <type 'numpy.ndarray'>
 #    	rospy.loginfo("GrpCommand")
     	try:    
-    	    rospy.loginfo (rospy.get_rostime().to_sec())
+#    	    rospy.loginfo (rospy.get_rostime().to_sec())
     	    while rospy.get_rostime().to_sec() == 0.0:
     	    	time.sleep(0.1)
-    	    	rospy.loginfo (rospy.get_rostime().to_sec())
+#    	    	rospy.loginfo (rospy.get_rostime().to_sec())
 
     	    jt = JointTrajectory()
     	    jt.header.stamp = rospy.Time.now()
@@ -121,7 +106,7 @@ class JointTrajPub(object):
     	    jt.joint_names.append("simple_gripper_right_spring_link_joint")
     	    jt.joint_names.append("simple_gripper_left_spring_link_joint")
     	    	    
-    	    dt = 0.1 	#default 0.01
+    	    dt = 0.01 	#default 0.01
     	    p = JointTrajectoryPoint()	
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])
@@ -138,42 +123,7 @@ class JointTrajPub(object):
 
     	except rospy.ROSInterruptException: pass
 
-    def start_loop(self, rate_value = 2.0):
-    	rospy.logdebug("Start Loop")
-    	pos1 = [-2.873, 0.0, 6.28, 3.015, 1.21, 1.264, -0.97]
-    	pos2 = [-2.873, 0.0, 6.28, 3.015, 1.21, 1.264, 0.97]
-    	position = "pos1"
-    	rate = rospy.Rate(rate_value)
-    	while not rospy.is_shutdown():
-    	  if position == "pos1":
-    	    self.move_joints(pos1)
-    	    position = "pos2"
-    	  else:
-    	    self.move_joints(pos2)
-    	    position = "pos1"
-    	  rate.sleep()
-
-    def start_sinus_loop(self, rate_value = 2.0):
-    	rospy.logdebug("Start Loop")
-    	w = 0.0
-    	x = 1.0*math.sin(w)
-    	#pos_x = [0.0,0.0,x]
-    	pos_x = [x, 0.0, 0.0]
-    	#pos_x = [0.0, x, 0.0]
-    	rate = rospy.Rate(rate_value)
-    	while not rospy.is_shutdown():
-    	    self.move_joints(pos_x)
-    	    w += 0.05
-    	    x = 1.0 * math.sin(w)
-    	    #pos_x = [0.0, 0.0, x]
-    	    pos_x = [x, 0.0, 0.0]
-    	    #pos_x = [0.0, x, 0.0]
-    	    print (x)
-    	    rate.sleep()
-
 if __name__=="__main__":
     rospy.init_node('joint_publisher_node', log_level=rospy.WARN)
     joint_publisher = JointTrajPub()
     rate_value = 8.0
-    #joint_publisher.start_loop(rate_value)
-    #joint_publisher.start_sinus_loop(rate_value)
