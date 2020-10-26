@@ -72,6 +72,41 @@ class JointTrajPub(object):
     	    jt.joint_names.append("wrist_2_joint")
     	    jt.joint_names.append("wrist_3_joint")
     	    	    
+    	    dt = 0.1 	#default 0.01
+    	    p = JointTrajectoryPoint()	
+    	    p.positions.append(1.488122534496775)
+    	    p.positions.append(-1.4496597816566892)
+    	    p.positions.append(2.4377209990850974)
+    	    p.positions.append(2.168370898415174)
+    	    p.positions.append(-1.4670589583209175)
+    	    p.positions.append(joints_array[5])
+    	    jt.points.append(p)
+    	    # set duration
+    	    jt.points[0].time_from_start = rospy.Duration.from_sec(dt)
+            print("p.positions", p.positions)
+
+    	    self._joint_traj_pub.publish(jt)
+
+    	except rospy.ROSInterruptException: pass
+
+    def jointTrajectoryCommand_reset(self, joints_array): # dtype=float32), <type 'numpy.ndarray'>
+#    	rospy.loginfo("jointTrajectoryCommand")
+    	try:    
+#    	    rospy.loginfo (rospy.get_rostime().to_sec())
+    	    while rospy.get_rostime().to_sec() == 0.0:
+    	    	time.sleep(0.1)
+#    	    	rospy.loginfo (rospy.get_rostime().to_sec())
+
+    	    jt = JointTrajectory()
+    	    jt.header.stamp = rospy.Time.now()
+    	    jt.header.frame_id = "ur5"
+    	    jt.joint_names.append("shoulder_pan_joint")
+    	    jt.joint_names.append("shoulder_lift_joint")
+    	    jt.joint_names.append("elbow_joint")
+    	    jt.joint_names.append("wrist_1_joint")
+    	    jt.joint_names.append("wrist_2_joint")
+    	    jt.joint_names.append("wrist_3_joint")
+    	    	    
     	    dt = 0.01 	#default 0.01
     	    p = JointTrajectoryPoint()	
     	    p.positions.append(joints_array[0])

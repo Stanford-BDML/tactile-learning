@@ -1,7 +1,7 @@
 from collections import deque
 import numpy as np
 import tensorflow as tf
-#from tensorflow import keras
+from tensorflow.keras import datasets, layers, models
 from sklearn.utils import shuffle
 # ROS
 import rospy

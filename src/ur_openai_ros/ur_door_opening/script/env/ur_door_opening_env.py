@@ -179,6 +179,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         # Get observation parameters
         self.joint_n = rospy.get_param("/obs_params/joint_n")
         self.eef_n = rospy.get_param("/obs_params/eef_n")
+        self.eef_rpy_n = rospy.get_param("/obs_params/eef_rpy_n")
         self.force_n = rospy.get_param("/obs_params/force_n")
         self.torque_n = rospy.get_param("/obs_params/torque_n")
         self.image_n = rospy.get_param("/obs_params/image_n")
@@ -202,6 +203,32 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self.previous_action = copy.deepcopy(self.arr_init_pos2)
         self.counter = 0
         self.max_rewards = 1
+        self.max_knob_rotation = 0
+        self.max_door_rotation = 0
+        self.max_wirst3 = 0
+        self.min_wirst3 = 0
+        self.max_wirst2 = 0
+        self.min_wirst2 = 0
+        self.max_wirst1 = 0
+        self.min_wirst1 = 0
+        self.max_elb = 0
+        self.min_elb = 0
+        self.max_shl = 0
+        self.min_shl = 0
+        self.max_shp = 0
+        self.min_shp = 0
+        self.max_force_x = 0
+        self.min_force_x = 0
+        self.max_force_y = 0
+        self.min_force_y = 0
+        self.max_force_z = 0
+        self.min_force_z = 0
+        self.max_torque_x = 0
+        self.min_torque_x = 0
+        self.max_torque_y = 0
+        self.min_torque_y = 0
+        self.max_torque_z = 0
+        self.min_torque_z = 0
 
         # Arm/Control parameters
         self._ik_params = setups['UR5_6dof']['ik_params']
@@ -366,7 +393,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         roll = -orientation[1, 2]
         pitch = orientation[0, 2]
         yaw = -orientation[0, 1]
-        
+       
         return Vector3(roll, pitch, yaw)
 
 
@@ -429,6 +456,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         :return: observation
         """
         joint_states = self.joints_state
+        eef_rpy = Vector3()
 
         self.force = self.wrench_stamped.wrench.force
         self.torque = self.wrench_stamped.wrench.torque
@@ -453,6 +481,9 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         eef_x, eef_y, eef_z = self.get_xyz(q)
         eef_x_ini, eef_y_ini, eef_z_ini = self.get_xyz(self.init_joint_pose2) 
 
+        eef_rpy = self.get_orientation(q)
+        eef_rpy_ini = self.get_orientation(self.init_joint_pose2) 
+
         observation = []
 #        rospy.logdebug("List of Observations==>"+str(self.observations))
         for obs_name in self.observations:
@@ -468,24 +499,30 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
                 observation.append((wr2_joint_ang - self.init_joint_pose2[4]) * self.joint_n)
             elif obs_name == "wr3_joint_ang":
                 observation.append((wr3_joint_ang - self.init_joint_pose2[5]) * self.joint_n)
-#            elif obs_name == "shp_joint_vel":
-#                observation.append(shp_joint_vel)
-#            elif obs_name == "shl_joint_vel":
-#                observation.append(shl_joint_vel)
-#            elif obs_name == "elb_joint_vel":
-#                observation.append(elb_joint_vel)
-#            elif obs_name == "wr1_joint_vel":
-#                observation.append(wr1_joint_vel)
-#            elif obs_name == "wr2_joint_vel":
-#                observation.append(wr2_joint_vel)
-#            elif obs_name == "wr3_joint_vel":
-#                observation.append(wr3_joint_vel)
+            elif obs_name == "shp_joint_vel":
+                observation.append(shp_joint_vel)
+            elif obs_name == "shl_joint_vel":
+                observation.append(shl_joint_vel)
+            elif obs_name == "elb_joint_vel":
+                observation.append(elb_joint_vel)
+            elif obs_name == "wr1_joint_vel":
+                observation.append(wr1_joint_vel)
+            elif obs_name == "wr2_joint_vel":
+                observation.append(wr2_joint_vel)
+            elif obs_name == "wr3_joint_vel":
+                observation.append(wr3_joint_vel)
             elif obs_name == "eef_x":
                 observation.append((eef_x - eef_x_ini) * self.eef_n)
             elif obs_name == "eef_y":
                 observation.append((eef_y - eef_y_ini) * self.eef_n)
             elif obs_name == "eef_z":
                 observation.append((eef_z - eef_z_ini) * self.eef_n)
+            elif obs_name == "eef_rpy_x":
+                observation.append((eef_rpy.x - eef_rpy_ini.x) * self.eef_rpy_n)
+            elif obs_name == "eef_rpy_y":
+                observation.append((eef_rpy.y - eef_rpy_ini.y) * self.eef_rpy_n)
+            elif obs_name == "eef_rpy_z":
+                observation.append((eef_rpy.z - eef_rpy_ini.z) * self.eef_rpy_n)
             elif obs_name == "force_x":
                 observation.append((self.force.x - self.force_ini.x) / self.force_limit * self.force_n)
             elif obs_name == "force_y":
@@ -505,7 +542,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
                     observation.append((ord(self.left_image.data[x]) - ord(self.left_image_ini.data[x])) * self.image_n)
             else:
                 raise NameError('Observation Asked does not exist=='+str(obs_name))
-#        print("observation", list(map(round, observation, [3]*len(observation))))
+        print("observation", list(map(round, observation, [3]*len(observation))))
 
         return observation
 
@@ -542,9 +579,9 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
     def first_reset(self):
         jointtrajpub = JointTrajPub()
         for update in range(100):
-        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos0)
+        	jointtrajpub.jointTrajectoryCommand_reset(self.arr_init_pos0)
         for update in range(100):
-        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos1)
+        	jointtrajpub.jointTrajectoryCommand_reset(self.arr_init_pos1)
 
     # Resets the state of the environment and returns an initial observation.
     def reset(self):
@@ -553,13 +590,13 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 	self._gz_conn.unpauseSim()
 #        rospy.logdebug("set_init_pose init variable...>>>" + str(self.init_joint_pose0))
         jointtrajpub = JointTrajPub()
-        for update in range(50):
+        for update in range(200):
         	jointtrajpub.GrpCommand(self.arr_init_g_pos1)
-        time.sleep(0.5)
+        time.sleep(1)
         for update in range(100):
-        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos2)
+        	jointtrajpub.jointTrajectoryCommand_reset(self.arr_init_pos2)
         for update in range(100):
-        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos1)
+        	jointtrajpub.jointTrajectoryCommand_reset(self.arr_init_pos1)
 
         # 0st: We pause the Simulator
 #        rospy.logdebug("Pausing SIM...")
@@ -617,7 +654,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         self._gz_conn.adjust_gravity()
 
         for update in range(100):
-        	jointtrajpub.jointTrajectoryCommand(self.arr_init_pos2)
+        	jointtrajpub.jointTrajectoryCommand_reset(self.arr_init_pos2)
         time.sleep(0.1)
         for update in range(50):
         	jointtrajpub.GrpCommand(self.arr_init_g_pos2)
@@ -632,7 +669,7 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
 
         # 8th: Get the State Discrete Stringuified version of the observations
 #        rospy.logdebug("get_observations...")
-       	observation = self.get_observations()
+        observation = self.get_observations()
 #        print("[observations]", observation)
 
         return observation
@@ -675,12 +712,67 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         # Act
         self._gz_conn.unpauseSim()
 
+        if self.max_wirst3 < action[5]:
+            self.max_wirst3 = action[5]
+        if self.min_wirst3 > action[5]:
+            self.min_wirst3 = action[5]
+        if self.max_wirst2 < action[4]:
+            self.max_wirst2 = action[4]
+        if self.min_wirst2 > action[4]:
+            self.min_wirst2 = action[4]
+        if self.max_wirst1 < action[3]:
+            self.max_wirst1 = action[3]
+        if self.min_wirst1 > action[3]:
+            self.min_wirst1 = action[3]
+        if self.max_elb < action[2]:
+            self.max_elb = action[2]
+        if self.min_elb > action[2]:
+            self.min_elb = action[2]
+        if self.max_shl < action[1]:
+            self.max_shl = action[1]
+        if self.min_shl > action[1]:
+            self.min_shl = action[1]
+        if self.max_shp < action[0]:
+            self.max_shp = action[0]
+        if self.min_shp > action[0]:
+            self.min_shp = action[0]
+
+        print("action", action)
+
         action = action + self.arr_init_pos2
+#        action = [1.488122534496775, -1.4496597816566892, 2.4377209990850974, 2.168370898415174, -1.4670589583209175, 1.4]
         self._act(action)
 
         self.wrench_stamped
         self.force = self.wrench_stamped.wrench.force
         self.torque = self.wrench_stamped.wrench.torque
+        print("force", self.force)
+        print("torque", self.torque)
+
+        if self.max_force_x < self.force.x:
+            self.max_force_x = self.force.x
+        if self.min_force_x > self.force.x:
+            self.min_force_x = self.force.x
+        if self.max_force_y < self.force.y:
+            self.max_force_y = self.force.y
+        if self.min_force_y > self.force.y:
+            self.min_force_y = self.force.y
+        if self.max_force_z < self.force.z:
+            self.max_force_z = self.force.z
+        if self.min_force_z > self.force.z:
+            self.min_force_z = self.force.z
+        if self.max_torque_x < self.torque.x:
+            self.max_torque_x = self.torque.x
+        if self.min_torque_x > self.torque.x:
+            self.min_torque_x = self.torque.x
+        if self.max_torque_y < self.torque.y:
+            self.max_torque_y = self.torque.y
+        if self.min_torque_y > self.torque.y:
+            self.min_torque_y = self.torque.y
+        if self.max_torque_z < self.torque.z:
+            self.max_torque_z = self.torque.z
+        if self.min_torque_z > self.torque.z:
+            self.min_torque_z = self.torque.z
 
         if self.force_limit < self.force.x or self.force.x < -self.force_limit:
         	self._act(self.previous_action)
@@ -728,12 +820,20 @@ class URSimDoorOpening(robot_gazebo_env_goal.RobotGazeboEnv):
         compute_rewards = 0
 
         if self.imu_link_rpy.x < 1.2:
-            compute_rewards = self.imu_link_rpy.x * 5 - abs(self.force.x / 1000) - abs(self.force.y / 1000) - abs(self.force.z / 1000)
+            compute_rewards = self.imu_link_rpy.x * 100
         else:
-            compute_rewards = 1.2 + 1.5708061 - self.imu_link_rpy.z
+            compute_rewards = 1.2 * 100 + 1.5708061 - self.imu_link_rpy.z
 
         if abs(self.door_frame.position.x + 0.0659) > self.tolerances or abs(self.door_frame.position.y - 0.5649) > self.tolerances or abs(self.door_frame.position.z - 0.0999) > self.tolerances:
-            compute_rewards -= 35 * ( 1000 - update ) / 1000
+            compute_rewards -= 50 * ( 128 - update ) / 128
+
+        if self.max_knob_rotation < self.imu_link_rpy.x:
+            self.max_knob_rotation = self.imu_link_rpy.x
+        if self.max_door_rotation < 1.5708061 - self.imu_link_rpy.z:
+            self.max_door_rotation = 1.5708061 - self.imu_link_rpy.z
+
+        print("imu_link_rpy", self.imu_link_rpy)
+        print("door_frame", self.door_frame.position.x + 0.0659, self.door_frame.position.y - 0.5649, self.door_frame.position.z - 0.0999)
 
         return compute_rewards
 

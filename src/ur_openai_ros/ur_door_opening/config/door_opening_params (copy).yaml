@@ -1,34 +1,43 @@
 # Algortihm Parameters
-alpha: 0.1
-gamma: 0.8
-epsilon: 0.9
-epsilon_discount: 0.999 # 1098 eps to reach 0.1
-nepisodes: 10000
-nsteps: 1000
+ML:
+  seed: 0
+  obs_dim: 74
+  n_act: 6
+  epochs: 30
+  hdim: 64
+  policy_lr: 1e-5
+  value_lr: 1e-5
+  max_std: 1.0
+  clip_range: 0.2
+  n_step: 128 # 1024
+
+  gamma: 0.99
+  lam: 0.98
+  episode_size: 1
+  batch_size: 128
+  nupdates: 30000
+
+  act_step: 30 #100
+  save_step: 500
 
 # Input type
 control_type: traj_pos #traj_vel or vel or pos or traj_pos
 
 # Environment Parameters
-desired_pose:
-    x: 0.0
-    y: 0.0
-    z: 1.0
-
-max_height: 3.0   # in meters
-min_height: 0.0   # in meters
 running_step: 0.0010   # in seconds
-door_frame_tolerances: 0.005
+door_frame_tolerances: 0.01 # 0.005
+max_update_rate: 3000 # 1000 = x1 speed
 
-force_limit: 35.000000  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
-torque_limit: 15.000000 # In position control:30 ~  (only rotate z1 ~ y-12)
+force_limit: 300.000000  # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
+torque_limit: 30.000000 # In position control:30 ~  (only rotate z1 ~ y-12)
 
 obs_params:
-  joint_n: 100
-  eef_n: 100
-  force_n: 1
-  torque_n: 1
-  image_n: 0.01
+  joint_n: 10 # 1/3.14 = 0.318471338
+  eef_n: 10 # 1
+  eef_rpy_n: 10 # 1
+  force_n: 5 # 1
+  torque_n: 5 # 1
+  image_n: 0.0175 # 1/255 = 0.003921569
 
 observations: # Observations you want to use for the learning
   - shp_joint_ang
@@ -46,6 +55,9 @@ observations: # Observations you want to use for the learning
   - eef_x
   - eef_y
   - eef_z
+  - eef_rpy_x
+  - eef_rpy_y
+  - eef_rpy_z
   - force_x
   - force_y
   - force_z
@@ -57,44 +69,28 @@ observations: # Observations you want to use for the learning
 joint_names: ['shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
 
 init_joint_pose0:
-  shp: 0.42113088235807705
-  shl: -2.499894322410209
-  elb: 2.465940488809082
-  wr1: 0.019181638229937903
-  wr2: 0.3869327391356494
-  wr3: -1.561166435896597
+  shp: 0
+  shl: -1.5707
+  elb: 0
+  wr1: -1.5707
+  wr2: 0
+  wr3: 0
 
 init_joint_pose1:
-  shp: 1.0936292324911197
-  shl: -1.9619247342409523
-  elb: 2.284918129311265
-  wr1: -0.3295925202225334
-  wr2: 1.0594761648023008
-  wr3: -1.5717792992464688
+  shp: 1.4410264033536153
+  shl: -1.6883855417730604
+  elb: 2.6771635884219136
+  wr1: 2.1674968289716623
+  wr2: -1.4199836765311638
+  wr3: 1.5702616267031195
 
 init_joint_pose2:
-  shp: 1.2168549330235976
-  shl: -1.7469892316131368
-  elb: 2.1438566966530352
-  wr1: -0.4029605278499071
-  wr2: 1.18284603228705
-  wr3: -1.5717792992464688
-
-eelink_pose_after_rotate:
-  shp: 1.2168549330235976
-  shl: -1.7469892316131368
-  elb: 2.1438566966530352
-  wr1: -0.4029605278499071
-  wr2: 1.18284603228705
-  wr3: -0.25820784403716246
-
-eelink_pose_after_pull:
-  shp: 1.5997938851995377
-  shl: -1.9340882496918201
-  elb: 2.277911783767653
-  wr1: -0.34604704175714396
-  wr2: 1.9609160463454813
-  wr3: -0.14887166325512347
+  shp: 1.488122534496775
+  shl: -1.4496597816566892
+  elb: 2.4377209990850974
+  wr1: 2.168370898415174
+  wr2: -1.4670589583209175
+  wr3: 1.5709174034899702
 
 init_grp_pose1:
   r_drive: 0
@@ -105,12 +101,12 @@ init_grp_pose1:
   l_spring: 0
 
 init_grp_pose2:
-  r_drive: 0.3
-  l_drive: 0.3
-  r_follower: -0.3
-  l_follower: -0.3
-  r_spring: 0.3
-  l_spring: 0.3
+  r_drive: 0.31
+  l_drive: 0.31
+  r_follower: -0.31
+  l_follower: -0.31
+  r_spring: 0.31
+  l_spring: 0.31
 # last time: 0.35NG 0.38, 0.4NG
 
 joint_limits_array:
