@@ -67,7 +67,7 @@ cd [path/to/demo/project/root]
 catkin build
 ```
 
-## Running this code for RL standup task simulation:
+## Running this code for RL door opening task simulation:
 1. source env
 ```console 
 source [path/to/demo/project/root]/devel/setup.bash
