@@ -53,6 +53,7 @@
     </spherical_coordinates>
 
     <model name='hinged_door'>
+
       <link name='frame'>
         <pose frame=''>-0.035 0.116 0 0 -0 0</pose>
         <collision name='collision_1'>
@@ -102,6 +103,7 @@
             </contact>
           </surface>
         </collision>
+
         <visual name='visual'>
           <pose frame=''>0 -0.06858 0 0 -0 0</pose>
           <geometry>
@@ -121,7 +123,7 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1</mass>
+          <mass>100</mass> <!-- It is important for fixing the position -->
         </inertial>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
@@ -225,6 +227,7 @@
             </contact>
           </surface>
         </collision>
+
         <visual name='handle1_visual'>
           <pose frame=''>0.015 -0.015 0 -1.57 0 0</pose>
           <geometry>
@@ -256,6 +259,7 @@
             </friction>
           </surface>
         </collision>
+
         <visual name='handle2_visual'>
           <pose frame=''>0.015 -0.055 0 1.57 -0 0</pose>
           <geometry>
@@ -280,6 +284,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
+
       <link name='latch'>
         <pose frame=''>-0.022 0.08 0.2725 1.5708 -0 0</pose>
         <collision name='latch_collision'>
@@ -329,6 +334,7 @@
             </contact>
           </surface>
         </collision>
+
         <visual name='latch_visual'>
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
@@ -353,6 +359,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
+
       <link name='imu_link'>
         <pose frame=''>-0.005 0.14 0.325 0 -0 0</pose>
         <inertial>
@@ -397,6 +404,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
+
       <joint name='latch_joint' type='fixed'>
         <parent>handles</parent>
         <child>latch</child>
@@ -425,6 +433,7 @@
           </ode>
         </physics>
       </joint>
+
       <joint name='imu_joint' type='fixed'>
         <parent>handles</parent>
         <child>imu_link</child>
@@ -453,6 +462,7 @@
           </ode>
         </physics>
       </joint>
+
       <joint name='handle' type='revolute'>
         <parent>door</parent>
         <child>handles</child>
@@ -482,6 +492,7 @@
           </ode>
         </physics>
       </joint>
+
       <joint name='hinge' type='revolute'>
         <parent>frame</parent>
         <child>door</child>
@@ -511,13 +522,18 @@
           </ode>
         </physics>
       </joint>
-      <joint name='world_joint' type='revolute'>
+
+      <joint name='world_joint' type='fixed'>
         <child>frame</child>
         <parent>world</parent>
         <axis>
           <limit>
             <lower>0</lower>
             <upper>0</upper>
+            <effort>1e+05</effort>
+            <velocity>0</velocity>
+            <stiffness>1e+20</stiffness>
+            <dissipation>1</dissipation>
           </limit>
           <xyz>0 1 0</xyz>
           <dynamics>
@@ -539,11 +555,8 @@
       </joint>
       <pose frame=''>0.05 0.6 0.1 0 -0 1.5708</pose>
     </model>
+
     <state world_name='default'>
-      <sim_time>894 202000000</sim_time>
-      <real_time>819 934385119</real_time>
-      <wall_time>1602966650 197130553</wall_time>
-      <iterations>894202</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -554,41 +567,28 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+
       <model name='hinged_door'>
         <pose frame=''>0.049999 0.6 0.100002 2e-06 -0 1.5708</pose>
         <scale>1 1 1</scale>
         <link name='door'>
           <pose frame=''>-0.029995 0.574999 0.607998 3.14159 5e-06 3.1408</pose>
-          <velocity>0.00056 0.000481 -0.000501 -4.1e-05 -0.000804 0.001252</velocity>
-          <acceleration>-0.023924 -0.014582 -0.001526 -5.2e-05 9.9e-05 0.308697</acceleration>
-          <wrench>-0.988673 -0.602612 -0.063076 0 -0 0</wrench>
         </link>
         <link name='frame'>
           <pose frame=''>-0.066001 0.565 0.100002 2e-06 -0 1.5708</pose>
-          <velocity>-0.000123 4e-06 0.000378 2.3e-05 0.000317 -5e-06</velocity>
-          <acceleration>0.000712 9e-05 0.000299 6.1e-05 -0.000265 -1.7e-05</acceleration>
-          <wrench>0.000712 9e-05 0.000299 0 -0 0</wrench>
         </link>
         <link name='handles'>
           <pose frame=''>-0.104994 0.514999 0.374798 -3.14159 -5e-06 -0.00079</pose>
-          <velocity>0.000821 0.00038 -0.000585 -4.2e-05 -0.000834 0.001264</velocity>
-          <acceleration>0.0055 0.103345 -0.001581 -8.3e-05 0.000106 0.308615</acceleration>
-          <wrench>0.0055 0.103345 -0.001581 0 -0 0</wrench>
         </link>
         <link name='imu_link'>
           <pose frame=''>-0.089994 0.594999 0.424997 -5e-06 -0 1.5708</pose>
-          <velocity>0.000671 0.000403 -0.000602 -4.4e-05 -0.000867 0.001273</velocity>
-          <acceleration>-0.019235 0.107959 -0.001618 -8.6e-05 0.00012 0.308559</acceleration>
-          <wrench>-0.001924 0.010796 -0.000162 0 -0 0</wrench>
         </link>
         <link name='latch'>
           <pose frame=''>-0.029994 0.577999 0.372498 1.57079 -0 1.5708</pose>
-          <velocity>0.000744 0.000474 -0.000517 -4.1e-05 -0.000824 0.001261</velocity>
-          <acceleration>-0.013925 0.126495 -0.001586 -8.2e-05 0.000101 0.308632</acceleration>
-          <wrench>-0.000696 0.006325 -7.9e-05 0 -0 0</wrench>
         </link>
       </model>
     </state>
+
     <gui fullscreen='0'>
       <camera name='user_camera'>
         <pose frame=''>2.4528 0.376262 0.228966 0 -0.1302 3.0562</pose>
@@ -596,5 +596,7 @@
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+
   </world>
+
 </sdf>

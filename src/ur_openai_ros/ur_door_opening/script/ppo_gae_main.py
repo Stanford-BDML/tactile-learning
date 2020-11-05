@@ -158,36 +158,37 @@ def main():
     tf.set_random_seed(seed)
     env.seed(seed=seed)
 
-    avg_return_list = deque(maxlen=1) # 10
-    avg_pol_loss_list = deque(maxlen=1) # 10
-    avg_val_loss_list = deque(maxlen=1) # 10
-    avg_entropy_list = deque(maxlen=1) # 10
-    avg_max_knob_rotation_list = deque(maxlen=1) # 10
-    avg_max_door_rotation_list = deque(maxlen=1) # 10
-    max_wrist3_list = deque(maxlen=1) # 10
-    min_wrist3_list = deque(maxlen=1) # 10
-    max_wrist2_list = deque(maxlen=1) # 10
-    min_wrist2_list = deque(maxlen=1) # 10
-    max_wrist1_list = deque(maxlen=1) # 10
-    min_wrist1_list = deque(maxlen=1) # 10
-    max_elb_list = deque(maxlen=1) # 10
-    min_elb_list = deque(maxlen=1) # 10
-    max_shl_list = deque(maxlen=1) # 10
-    min_shl_list = deque(maxlen=1) # 10
-    max_shp_list = deque(maxlen=1) # 10
-    min_shp_list = deque(maxlen=1) # 10
-    max_force_x_list = deque(maxlen=1) # 10
-    min_force_x_list = deque(maxlen=1) # 10
-    max_force_y_list = deque(maxlen=1) # 10
-    min_force_y_list = deque(maxlen=1) # 10
-    max_force_z_list = deque(maxlen=1) # 10
-    min_force_z_list = deque(maxlen=1) # 10
-    max_torque_x_list = deque(maxlen=1) # 10
-    min_torque_x_list = deque(maxlen=1) # 10
-    max_torque_y_list = deque(maxlen=1) # 10
-    min_torque_y_list = deque(maxlen=1) # 10
-    max_torque_z_list = deque(maxlen=1) # 10
-    min_torque_z_list = deque(maxlen=1) # 10
+    maxlen_num = 10
+    avg_return_list = deque(maxlen=maxlen_num) # 10
+    avg_pol_loss_list = deque(maxlen=maxlen_num) # 10
+    avg_val_loss_list = deque(maxlen=maxlen_num) # 10
+    avg_entropy_list = deque(maxlen=maxlen_num) # 10
+    avg_max_knob_rotation_list = deque(maxlen=maxlen_num) # 10
+    avg_max_door_rotation_list = deque(maxlen=maxlen_num) # 10
+    max_wrist3_list = deque(maxlen=maxlen_num) # 10
+    min_wrist3_list = deque(maxlen=maxlen_num) # 10
+    max_wrist2_list = deque(maxlen=maxlen_num) # 10
+    min_wrist2_list = deque(maxlen=maxlen_num) # 10
+    max_wrist1_list = deque(maxlen=maxlen_num) # 10
+    min_wrist1_list = deque(maxlen=maxlen_num) # 10
+    max_elb_list = deque(maxlen=maxlen_num) # 10
+    min_elb_list = deque(maxlen=maxlen_num) # 10
+    max_shl_list = deque(maxlen=maxlen_num) # 10
+    min_shl_list = deque(maxlen=maxlen_num) # 10
+    max_shp_list = deque(maxlen=maxlen_num) # 10
+    min_shp_list = deque(maxlen=maxlen_num) # 10
+    max_force_x_list = deque(maxlen=maxlen_num) # 10
+    min_force_x_list = deque(maxlen=maxlen_num) # 10
+    max_force_y_list = deque(maxlen=maxlen_num) # 10
+    min_force_y_list = deque(maxlen=maxlen_num) # 10
+    max_force_z_list = deque(maxlen=maxlen_num) # 10
+    min_force_z_list = deque(maxlen=maxlen_num) # 10
+    max_torque_x_list = deque(maxlen=maxlen_num) # 10
+    min_torque_x_list = deque(maxlen=maxlen_num) # 10
+    max_torque_y_list = deque(maxlen=maxlen_num) # 10
+    min_torque_y_list = deque(maxlen=maxlen_num) # 10
+    max_torque_z_list = deque(maxlen=maxlen_num) # 10
+    min_torque_z_list = deque(maxlen=maxlen_num) # 10
 
     # save fig
     x_data = []

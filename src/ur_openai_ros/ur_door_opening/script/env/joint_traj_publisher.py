@@ -72,18 +72,18 @@ class JointTrajPub(object):
     	    jt.joint_names.append("wrist_2_joint")
     	    jt.joint_names.append("wrist_3_joint")
     	    	    
-    	    dt = 0.1 	#default 0.01
+    	    dt = 1 	#default 0.01
     	    p = JointTrajectoryPoint()	
-    	    p.positions.append(1.488122534496775)
-    	    p.positions.append(-1.4496597816566892)
-    	    p.positions.append(2.4377209990850974)
-    	    p.positions.append(2.168370898415174)
-    	    p.positions.append(-1.4670589583209175)
+    	    p.positions.append(1.488122534496775)   # 1.488122534496775
+    	    p.positions.append(-1.4496597816566892) # -1.4496597816566892
+    	    p.positions.append(joints_array[2])     # 2.4377209990850974
+    	    p.positions.append(joints_array[3])
+    	    p.positions.append(joints_array[4])
     	    p.positions.append(joints_array[5])
     	    jt.points.append(p)
     	    # set duration
     	    jt.points[0].time_from_start = rospy.Duration.from_sec(dt)
-            print("p.positions", p.positions)
+#            print("p.positions", p.positions)
 
     	    self._joint_traj_pub.publish(jt)
 
@@ -107,7 +107,7 @@ class JointTrajPub(object):
     	    jt.joint_names.append("wrist_2_joint")
     	    jt.joint_names.append("wrist_3_joint")
     	    	    
-    	    dt = 0.01 	#default 0.01
+    	    dt = 0.1 	#default 0.01
     	    p = JointTrajectoryPoint()	
     	    p.positions.append(joints_array[0])
     	    p.positions.append(joints_array[1])

@@ -5,11 +5,11 @@ ML:
   n_act: 6
   epochs: 10
   hdim: 64
-  policy_lr: 1e-3
-  value_lr: 1e-3
+  policy_lr: 1e-4
+  value_lr: 1e-4
   max_std: 1.0
   clip_range: 0.2
-  n_step: 64 # 1024
+  n_step: 16 # 1024
 
   gamma: 0.99
   lam: 0.98
@@ -17,7 +17,7 @@ ML:
   batch_size: 16
   nupdates: 30000
 
-  act_step: 10 #100
+  act_step: 1 #100
   save_step: 500
 
 # Input type
@@ -28,8 +28,10 @@ running_step: 0.0010   # in seconds
 door_frame_tolerances: 0.01 # 0.005
 max_update_rate: 3000 # 1000 = x1 speed
 
-force_limit: 100 # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
-torque_limit: 30 # In position control:30 ~  (only rotate z1 ~ y-12)
+force_limit: 40 # In position control:300 ~ over 1000 (only rotate y2.5 ~ z-32)
+torque_limit: 8 # In position control:30 ~  (only rotate z1 ~ y-12)
+min_static_limit: -0.4
+max_static_limit: 0.4
 
 obs_params:
   joint_n: 1 # 1/3.14 = 0.318471338
@@ -40,31 +42,31 @@ obs_params:
   image_n: 0.007843 # 1/255 = 0.003921569
 
 observations: # Observations you want to use for the learning
-  - shp_joint_ang
+  - shp_joint_ang #6
   - shl_joint_ang
   - elb_joint_ang
   - wr1_joint_ang
   - wr2_joint_ang
   - wr3_joint_ang
-  - shp_joint_vel
+  - shp_joint_vel #6
   - shl_joint_vel
   - elb_joint_vel
   - wr1_joint_vel
   - wr2_joint_vel
   - wr3_joint_vel
-  - eef_x
+  - eef_x #3
   - eef_y
   - eef_z
-  - eef_rpy_x
+  - eef_rpy_x #3
   - eef_rpy_y
   - eef_rpy_z
-  - force_x
+  - force_x #3
   - force_y
   - force_z
-  - torque_x
+  - torque_x #3
   - torque_y
   - torque_z
-  - image_data
+  - image_data #56
 
 joint_names: ['shoulder_link', 'upper_arm_link', 'forearm_link', 'wrist_1_link', 'wrist_2_link', 'wrist_3_link']
 
@@ -91,6 +93,38 @@ init_joint_pose2:
   wr1: 2.168370898415174
   wr2: -1.4670589583209175
   wr3: 1.5709174034899702
+
+before_grasp:
+  shp: 1.489002061556269
+  shl: -1.54026052194116
+  elb: 2.5290460531396746
+  wr1: 2.151898633
+  wr2: -1.489276956290282
+  wr3: 1.572350908536314
+
+grasp_position:
+  shp: 1.5126126911734412
+  shl: -1.3452052773816303
+  elb: 2.2863548312482087
+  wr1: 2.1978244
+  wr2: -1.5124909751758002
+  wr3: 1.5709822141782614
+
+after_rotate:
+  shp: 1.5124241329766772
+  shl: -1.3433117698465844
+  elb: 2.285366225371523
+  wr1: 2.198828091
+  wr2: -1.5111060661614495
+  wr3: 2.498003631862501
+
+after_pull:                 # after_pull - grasp_position
+  shp: 1.5016721356634721   # −0.010940556
+  shl: -1.4475265896235363  # −0.102321312
+  elb: 2.4242266531846974   # 0.137871822
+  wr1: 2.176294584          # −0.021529816
+  wr2: -1.485074508063656   # 0.027416467
+  wr3: 2.500116786271708    # 0.929134572
 
 init_grp_pose1:
   r_drive: 0

@@ -118,28 +118,28 @@ class PPOGAEAgent(object):
         self.logp_old = tf.reduce_sum(-0.5*tf.square((y-old_mu_ph)/old_sigma_ph)-tf.math.log(old_sigma_ph)- 0.5*np.log(2.*np.pi),axis=1)
         
     def _kl_entropy(self):
-
+        delta = 1e-3 # add for preventing from "nan"
         mean, std = self.mean, self.std
         old_mean, old_std = self.old_mean_ph, self.old_std_ph
  
-        log_std_old = tf.math.log(old_std)
-        log_std_new = tf.math.log(std)
+        log_std_old = tf.math.log(tf.clip_by_value(old_std, 1e-10, 1.0))
+        log_std_new = tf.math.log(tf.clip_by_value(std, 1e-10, 1.0))
         frac_std_old_new = old_std/std
 
         # KL DIVERGENCE BETWEEN TWO GAUSSIAN
         kl = tf.reduce_sum(log_std_new - log_std_old + 0.5*tf.square(frac_std_old_new) + 0.5*tf.square((mean - old_mean)/std)- 0.5,axis=1)
-        self.kl = tf.reduce_mean(kl)
+        self.kl = tf.reduce_mean(kl) + 1e-7
         
         # ENTROPY OF GAUSSIAN
-        entropy = tf.reduce_sum(log_std_new + 0.5 + 0.5*np.log(2*np.pi),axis=1)
-        self.entropy = tf.reduce_mean(entropy)
+        entropy = tf.reduce_sum(log_std_new + 0.5 + 0.5*np.log(2*np.pi + delta),axis=1)
+        self.entropy = tf.reduce_mean(entropy) + 1e-7
             
     def _loss_train_op(self):
         
         # REINFORCE OBJECTIVE
         ratio = tf.exp(self.logp - self.logp_old)
         cliped_ratio = tf.clip_by_value(ratio,clip_value_min=1-self.clip_range,clip_value_max=1+self.clip_range)
-        self.policy_loss = -tf.reduce_mean(tf.minimum(self.adv_ph*ratio,self.adv_ph*cliped_ratio))
+        self.policy_loss = -tf.reduce_mean(tf.minimum(self.adv_ph*ratio,self.adv_ph*cliped_ratio)) + 1e-7 # add 1e-10 for preventing from "nan"
         
         # POLICY OPTIMIZER
         self.pol_var_list = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES, scope="policy")
